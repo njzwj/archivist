@@ -5,6 +5,8 @@ import os
 
 dotenv.load_dotenv()
 
+power_llm_results_path = os.path.expanduser(os.getenv('POWER_LLM_RESULTS_PATH'))
+
 video_sites = [
     'youtube',
     'bilibili',
@@ -14,7 +16,7 @@ video_sites = [
 def parse_args():
     parser = argparse.ArgumentParser(description="Download files from a URL to a specified output directory.")
     parser.add_argument('url', type=str, help='The URL to download the file from')
-    parser.add_argument('output_dir', type=str, help='The directory to save the downloaded file', nargs='?', default=os.getenv('POWER_LLM_RESULTS_PATH'))
+    parser.add_argument('output_dir', type=str, help='The directory to save the downloaded file', nargs='?', default=power_llm_results_path)
     return parser.parse_args()
 
 def clean_url(url):
