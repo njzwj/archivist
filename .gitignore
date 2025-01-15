@@ -1,3 +1,5 @@
 .env
 .huggingface
 results
+__pycache__
+*.egg-info
