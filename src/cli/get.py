@@ -1,11 +1,11 @@
 from langchain_core.runnables import RunnablePassthrough
 from operator import itemgetter
-from src.runnables.tools import get_video, extract_audio, transcript, refine_transcript, extract_tags, extract_title_from_path, created_at, clean_temp_files
+from src.runnables.tools import get_video, extract_audio, transcript, extract_title_from_path, created_at, clean_temp_files, write_to_file
+from src.runnables.prompts import refine_transcript, extract_tags
 import argparse
-import datetime
 
 from ..utils.config import get_config
-from ..pipelines import transcript
+from ..utils.decorators import timer, count_tokens
 
 config = get_config()
 
@@ -38,12 +38,14 @@ chain = (
         title=lambda inputs: extract_title_from_path(inputs["video_path"]),
     )
     | {
+        "output_dir": itemgetter("output_dir"),
         "url": itemgetter("url"),
         "created_at": created_at,
         "title": itemgetter("title"),
         "tags": itemgetter("tags"),
         "transcript": itemgetter("transcript"),
     }
+    | write_to_file
 )
 
 def parse_args():
@@ -62,6 +64,8 @@ def clean_url(url):
     """
     return url.split('?')[0].strip('/\\').strip('/')
 
+@timer()
+@count_tokens()
 def get_wrapper(url, output_dir):
     url = clean_url(url)
     for site in video_sites:

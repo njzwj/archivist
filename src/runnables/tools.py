@@ -1,14 +1,14 @@
-from langchain_core.prompts import PromptTemplate
-import json
 import os
 import re
 import subprocess
 import datetime
+import time
+import json
 
-from ..core.models import get_hf_whisper_large_v3_turbo, get_azure_chat_openai
+from ..core.models import get_hf_whisper_large_v3_turbo
 
-def created_at():
-    return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S %z')
+def created_at(_):
+    return time.strftime('%Y-%m-%d %H:%M:%S %z')
 
 def get_video(url, output_dir):
     """
@@ -36,7 +36,7 @@ def get_video(url, output_dir):
     exts = re.findall(r"\.(mp4|webm)", stdout + stderr)
     if not exts:
         raise ValueError(stderr)
-    return file_name
+    return os.path.join(output_dir, file_name)
 
 def extract_audio(video_path):
     """
@@ -67,44 +67,6 @@ def transcript(audio_path):
     transcript = "".join([chunk["text"] for chunk in chunks])
     return transcript
 
-def clean_temp_files(inputs):
-    """
-    Clean up temporary files created during the process.
-    Args:
-        inputs (dict): The inputs to the process.
-    """
-    for key, value in inputs.items():
-        if key.endswith("_path") and os.path.exists(value):
-            os.remove(value)
-
-refine_transcript = PromptTemplate.from_template(
-    """
-    Refine the following transcript:
-    '''
-    {transcript}
-    '''
-    Above is a transcript of a video downloaded from the internet by a model.
-    Refine the transcript, fix errors caused by the model, and make any necessary edits.
-    Possible errors include misheard words, incorrect punctuation, homophones, and other transcription errors.
-    Write directly without any explanation or additional information.
-    """
-) | get_azure_chat_openai() | (lambda x: x.content)
-
-extract_title = PromptTemplate.from_template(
-    """
-    '''
-    {transcript}
-    '''
-    Above is a transcript of a video.
-    Based on the above transcript, extract the title of the video.
-    - Use the language of the transcript. If transcript is in English, extract the title in English.
-      If Chinese, extract the title in Chinese, so on and so forth.
-    - Return plain text, without any formatting, spaces, line breaks, etc.
-    - Title should be a single sentence, not a paragraph.
-    - Clear and concise, to the point. Best describe the content of the video.
-    """
-) | get_azure_chat_openai() | (lambda x: x.content)
-
 def extract_title_from_path(path):
     """
     Extract the title from a file path.
@@ -117,20 +79,24 @@ def extract_title_from_path(path):
     title, _ = os.path.splitext(file_name)
     return title
 
-extract_tags = (
-    lambda inputs: { "input": json.dumps(inputs, ensure_ascii=False) }
-) | PromptTemplate.from_template(
+def clean_temp_files(inputs):
     """
-    '''
-    {input}
-    '''
-    Above is a piece of information scraped and processed from the internet.
-    You act as a content creator and need to generate tags for this piece of information.
-    - The tags should be relevant to the content.
-    - The tags should be concise and informative.
-    - The tags should be separated by commas.
-    - Tags should in English.
-    - Tags should be single words or short phrases.
-    Write directly below this line, without any explanation. Because post processing splits the text by comma, avoid using commas in the tags.
+    Clean up temporary files created during the process.
+    Args:
+        inputs (dict): The inputs to the process.
     """
-) | get_azure_chat_openai() | (lambda x: x.content) | (lambda x: [tag.strip() for tag in x.split(",")])
+    for key, value in inputs.items():
+        if key.endswith("_path") and os.path.exists(value):
+            os.remove(value)
+
+def write_to_file(inputs):
+    output_dir = inputs["output_dir"]
+    file_name = os.path.join(output_dir, inputs["title"] + ".json")
+    content = {k: v for k, v in inputs.items() if k != "output_dir"}
+    with open(file_name, 'w') as f:
+        f.write(json.dumps(content, indent=4, ensure_ascii=False))
+    return inputs
+
+def load_from_file(file_path):
+    with open(file_path, 'r') as f:
+        return json.load(f)

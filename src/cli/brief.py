@@ -1,40 +1,31 @@
+from langchain_core.runnables import RunnableGenerator, RunnablePassthrough, RunnablePick
+from operator import itemgetter
 from langchain_community.callbacks import get_openai_callback
 import argparse
 import dotenv
 import os
 import re
 import time
-from datetime import datetime, timedelta
+import datetime
+import json
 
-from ..pipelines import summarize_one, format_markdown, load_json
+from ..utils.config import get_config
+from ..utils.decorators import timer, count_tokens
+from ..runnables.prompts import write_article, format_markdown
+from ..runnables.tools import load_from_file
 
+config = get_config()
+default_output_file = os.path.join(config.power_llm_results_path, f"briefing_{datetime.datetime.now().strftime('%Y-%m-%d')}.md")
 
-dotenv.load_dotenv()
+cache_key = 'briefing'
 
-power_llm_results_path = os.path.expanduser(os.getenv('POWER_LLM_RESULTS_PATH'))
-
-current_date = datetime.now().strftime('%Y-%m-%d')
-default_briefing_path = os.path.join(power_llm_results_path, f'{current_date}-briefing.md')
-
-def timer(func):
-    def wrapper(*args, **kwargs):
-        start_time = time.time()
-        result = func(*args, **kwargs)
-        end_time = time.time()
-        print(f"Complete {func.__name__}, {end_time - start_time:.2f} sec")
-        return result
-    return wrapper
-
-def count_tokens(func):
-    def wrapper(*args, **kwargs):
-        with get_openai_callback() as cb:
-            res = func(*args, **kwargs)
-            print("=== OpenAI API Usage ===")
-            print(f"Tokens used: {cb.total_tokens}")
-            print(f"Total cost: ${cb.total_cost:.2f}")
-            print("========================")
-            return res
-    return wrapper
+def parse_args():
+    parser = argparse.ArgumentParser(description='Generate a briefing from the results directory.')
+    parser.add_argument('-i', '--input_dir', type=str, help='The directory containing the JSON files', default=config.power_llm_results_path)
+    parser.add_argument('-t', '--time', type=str, help='The time range to summarize', default='3 day')
+    parser.add_argument('-o', '--output_file', type=str, help='The output file to write the briefing to', default=default_output_file)
+    args = parser.parse_args()
+    return args
 
 def start_time(t):
     time_map = {
@@ -52,29 +43,36 @@ def start_time(t):
     ret = datetime.now() - time_map[unit](value)
     return ret.replace(tzinfo=None)
 
-def parse_args():
-    parser = argparse.ArgumentParser(description='Generate a briefing from the results directory.')
-    parser.add_argument('-i', '--input_dir', type=str, help='The directory containing the JSON files', default=power_llm_results_path)
-    parser.add_argument('-t', '--time', type=str, help='The time range to summarize', default='3 day')
-    parser.add_argument('-o', '--output_file', type=str, help='The output file to write the briefing to', default=default_briefing_path)
-    args = parser.parse_args()
-    return args
+def test_start_time(start, data):
+    return data["created_at"].replace(tzinfo=None) >= start_time(start)
 
-def summarize_with_cache(d):
-    cache_key = 'summarization'
-    if cache_key in d:
-        return d[cache_key]
-    summarized = summarize_one(d)
-    d[cache_key] = summarized
-    return summarized
+def load_json_paths(input_dir):
+    return [os.path.join(input_dir, f) for f in os.listdir(input_dir) if f.endswith('.json')]
+
+def summarize_with_cache(d, start_time, language):
+    created_at = datetime.datetime.fromisoformat(d["created_at"])
+    if not test_start_time(start_time, created_at):
+        return None
+
+    if cache_key not in d:
+        summarized = write_article({**d, "language": language})
+        d = {**d, cache_key: summarized}
+
+    return d
 
 @timer
 @count_tokens
 def summarize_wrapper(time, input_dir, output_file):
     st = start_time(time)
-    files = [f for f in os.listdir(input_dir) if f.endswith('.json')]
-    data = [load_json(os.path.join(input_dir, f)) for f in files]
-    data = [d for d in data if d['created_at'].replace(tzinfo=None) > st]
+    files = load_json_paths(input_dir)
+    data = [load_from_file(f) for f in files]
+    data = [summarize_with_cache(d, st, "Chinese Simplified") for d in data]
+    data = [d for d in data if d is not None]
+
+    for d, fn in zip(data, files):
+        with open(fn, 'w') as f:
+            f.write(json.dumps(d, indent=4, ensure_ascii=False))
+
     data = sorted(data, key=lambda x: x['created_at'])
 
     lines = [
@@ -87,7 +85,7 @@ def summarize_wrapper(time, input_dir, output_file):
         summarized = summarize_with_cache(d)
         lines.append('\n---\n')
         lines.append(f'## {d["title"]}')
-        lines.append(f'来源 [{d["title"]}]({d["source"]})')
+        lines.append(f'来源 [{d["title"]}]({d["url"]})')
         lines.append(f'获取时间: {d["created_at"].strftime("%Y-%m-%d %H:%M:%S")}')
         lines.append('\n' + summarized)
     
