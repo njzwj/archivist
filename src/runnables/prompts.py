@@ -69,7 +69,7 @@ write_article = PromptTemplate.from_template(
     - In the size of an average blog post.
     - Papagraphs should be informative, not too scattered.
     - Reorganize if needed, better order, flow and coherence.
-    - Write using {languate}. For names, terms you cannot infer, keep them in the original language.
+    - Write using {language}. For names, terms you cannot infer, keep them in the original language.
     Format requirements:
     - Summarize keypoints briefly in the beginning, in lists and bullet points.
     - Rewrite the main content in paragraphs.

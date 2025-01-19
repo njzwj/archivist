@@ -6,7 +6,7 @@ import dotenv
 import os
 import re
 import time
-import datetime
+from datetime import datetime, timedelta
 import json
 
 from ..utils.config import get_config
@@ -15,7 +15,7 @@ from ..runnables.prompts import write_article, format_markdown
 from ..runnables.tools import load_from_file
 
 config = get_config()
-default_output_file = os.path.join(config.power_llm_results_path, f"briefing_{datetime.datetime.now().strftime('%Y-%m-%d')}.md")
+default_output_file = os.path.join(config.power_llm_results_path, f"briefing_{datetime.now().strftime('%Y-%m-%d')}.md")
 
 cache_key = 'briefing'
 
@@ -43,25 +43,25 @@ def start_time(t):
     ret = datetime.now() - time_map[unit](value)
     return ret.replace(tzinfo=None)
 
-def test_start_time(start, data):
-    return data["created_at"].replace(tzinfo=None) >= start_time(start)
+def test_start_time(start, created_at):
+    return created_at.replace(tzinfo=None) >= start
 
 def load_json_paths(input_dir):
     return [os.path.join(input_dir, f) for f in os.listdir(input_dir) if f.endswith('.json')]
 
 def summarize_with_cache(d, start_time, language):
-    created_at = datetime.datetime.fromisoformat(d["created_at"])
+    created_at = datetime.fromisoformat(d["created_at"])
     if not test_start_time(start_time, created_at):
         return None
 
     if cache_key not in d:
-        summarized = write_article({**d, "language": language})
+        summarized = write_article.invoke({**d, "language": language})
         d = {**d, cache_key: summarized}
 
     return d
 
-@timer
-@count_tokens
+@timer()
+@count_tokens()
 def summarize_wrapper(time, input_dir, output_file):
     st = start_time(time)
     files = load_json_paths(input_dir)
@@ -82,14 +82,13 @@ def summarize_wrapper(time, input_dir, output_file):
         f'下述内容是从网页、视频等来源提取的信息，仅供参考。',
     ]
     for d in data:
-        summarized = summarize_with_cache(d)
         lines.append('\n---\n')
         lines.append(f'## {d["title"]}')
         lines.append(f'来源 [{d["title"]}]({d["url"]})')
-        lines.append(f'获取时间: {d["created_at"].strftime("%Y-%m-%d %H:%M:%S")}')
-        lines.append('\n' + summarized)
+        lines.append(f'获取时间: {d["created_at"]}')
+        lines.append('\n' + d["briefing"])
     
-    formatted = format_markdown('\n'.join(lines))
+    formatted = format_markdown.invoke({"content": '\n'.join(lines)})
     with open(output_file, 'w') as f:
         f.write(formatted)
 
