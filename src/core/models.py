@@ -1,7 +1,7 @@
 from langchain_openai import AzureChatOpenAI
 from transformers import pipeline
 
-from .config import get_config
+from ..utils import get_config
 
 config = get_config()
 
