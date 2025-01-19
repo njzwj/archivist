@@ -8,8 +8,8 @@ setup(
     description='A collection of utilities of LLM',
     entry_points={
         'console_scripts': [
-            'get=src.tools:get',
-            'brief=src.tools:brief',
+            'get=src.cli:get',
+            'brief=src.cli:brief',
         ],
     },
 )

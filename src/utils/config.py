@@ -4,7 +4,7 @@ import os
 
 POWER_LLM_ENV_PATH = os.path.expanduser(os.getenv("POWER_LLM_ENV_PATH", "~/.power-llm.env"))
 
-dotenv.load_dotenv(dotenv_path=os.path.join(POWER_LLM_ENV_PATH, ".env"))
+dotenv.load_dotenv(dotenv_path=POWER_LLM_ENV_PATH)
 
 class Config:
 
