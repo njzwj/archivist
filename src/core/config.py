@@ -15,4 +15,5 @@ class Config:
     azure_openai_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
     power_llm_results_path = os.path.expanduser(os.getenv("POWER_LLM_RESULTS_PATH"))
 
-config = Config()
+def get_config():
+    return Config()

@@ -1,5 +1,5 @@
-from .config import config
+from .config import get_config
 
 __all__ = [
-    "config"
+    "get_config",
 ]
