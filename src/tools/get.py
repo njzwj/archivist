@@ -1,7 +1,8 @@
 import argparse
-from ..pipelines import transcript
 import dotenv
 import os
+
+from ..pipelines import transcript
 
 dotenv.load_dotenv()
 

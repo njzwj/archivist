@@ -97,7 +97,7 @@ def load_jsons_from_dir(dir):
     print(f"Successfully loaded {success_count} JSON files.")
     print(f"Failed to load {failure_count} JSON files.")
 
-def summarize(data):
+def summarize_one(data):
     prompt = f"""
     <content>{data['content']}</content>
     Above is a content from internet. Rewrite it as a professional article (like The Economist article). Here are the key requirements:
@@ -133,14 +133,31 @@ def summarize(data):
     summary = results.content
     return summary
 
-@timer
-@count_tokens
-def main():
-    args = parse_args()
-    start = start_time(args.time)
+def format_markdown(md):
+    prompt = f"""
+    <content>{md}</content>
+    Above is a markdown content. Format it to a more readable markdown content. Here are the key requirements:
+    - Keep the original content.
+    - Use h2 as each section title.
+    - Use h1 as the title of the whole article.
+    - Unless necessary, avoid using h3 and h4.
+    - Make each section format aligned.
+    Output directly below this line, without any explanation and xml tags."""
+    model = AzureChatOpenAI(
+        azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+        azure_deployment="gpt-4o-mini",
+        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+        temperature=0,
+    )
+    results = model.invoke(prompt)
+    formatted = results.content
+    return formatted
+
+def summarize(t, input_dir, output_file):
+    start = start_time(t)
     print(f"Summarizing results from {start} to {datetime.datetime.now()}")
 
-    data = sorted(load_jsons_from_dir(args.input_dir), key=lambda x: x['created_at'], reverse=True)
+    data = sorted(load_jsons_from_dir(input_dir), key=lambda x: x['created_at'], reverse=True)
     data = [x for x in data if x['created_at'].replace(tzinfo=None) > start.replace(tzinfo=None)]
 
     lines = [
@@ -150,7 +167,7 @@ def main():
     ]
     
     for item in data:
-        summarized = summarize(item)
+        summarized = summarize_one(item)
 
         lines.append(f"\n## {item['title']}")
         lines.append(f"\nSource: [{item['title']}]({item['source']})")
@@ -159,8 +176,14 @@ def main():
 
         lines.append("\n" + summarized)
     
-    with open(args.output_file, 'w') as f:
+    with open(output_file, 'w') as f:
         f.write("\n".join(lines))
+
+@timer
+@count_tokens
+def main():
+    args = parse_args()
+    summarize(args.time, args.input_dir, args.output_file)
 
 if __name__ == "__main__":
     main()

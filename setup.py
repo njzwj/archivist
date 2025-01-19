@@ -9,6 +9,7 @@ setup(
     entry_points={
         'console_scripts': [
             'get=src.tools:get',
+            'brief=src.tools:brief',
         ],
     },
 )
