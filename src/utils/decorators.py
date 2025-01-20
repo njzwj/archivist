@@ -1,6 +1,7 @@
 import time
 from langchain_community.callbacks import get_openai_callback
 
+
 def timer(verbose=True):
     def decorator(func):
         def wrapper(*args, **kwargs):
@@ -13,8 +14,11 @@ def timer(verbose=True):
                 print(f"Complete {func.__name__}, {end_time - start_time:.2f} sec")
                 print("========================")
             return result
+
         return wrapper
+
     return decorator
+
 
 def count_tokens(verbose=True):
     def decorator(func):
@@ -27,5 +31,7 @@ def count_tokens(verbose=True):
                     print(f"Total cost: ${cb.total_cost:.2f}")
                     print("========================")
                 return res
+
         return wrapper
+
     return decorator

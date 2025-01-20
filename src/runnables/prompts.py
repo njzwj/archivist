@@ -9,11 +9,14 @@ from ..core.models import get_azure_chat_openai
 
 model = get_azure_chat_openai()
 
+
 def c(inputs):
     return inputs.content
 
-refine_transcript = PromptTemplate.from_template(
-    """
+
+refine_transcript = (
+    PromptTemplate.from_template(
+        """
     Refine the following transcript:
     '''
     {transcript}
@@ -23,10 +26,14 @@ refine_transcript = PromptTemplate.from_template(
     Possible errors include misheard words, incorrect punctuation, homophones, and other transcription errors.
     Write directly without any explanation or additional information.
     """
-) | model | c
+    )
+    | model
+    | c
+)
 
-extract_title = PromptTemplate.from_template(
-    """
+extract_title = (
+    PromptTemplate.from_template(
+        """
     '''
     {transcript}
     '''
@@ -38,12 +45,15 @@ extract_title = PromptTemplate.from_template(
     - Title should be a single sentence, not a paragraph.
     - Clear and concise, to the point. Best describe the content of the video.
     """
-) | model | c
+    )
+    | model
+    | c
+)
 
 extract_tags = (
-    lambda inputs: { "input": json.dumps(inputs, ensure_ascii=False) }
-) | PromptTemplate.from_template(
-    """
+    (lambda inputs: {"input": json.dumps(inputs, ensure_ascii=False)})
+    | PromptTemplate.from_template(
+        """
     '''
     {input}
     '''
@@ -56,10 +66,15 @@ extract_tags = (
     - Tags should be single words or short phrases.
     Write directly below this line, without any explanation. Because post processing splits the text by comma, avoid using commas in the tags.
     """
-) | model | c | (lambda x: [tag.strip() for tag in x.split(",")])
+    )
+    | model
+    | c
+    | (lambda x: [tag.strip() for tag in x.split(",")])
+)
 
-write_article = PromptTemplate.from_template(
-    """
+write_article = (
+    PromptTemplate.from_template(
+        """
     {transcript}
     ---
     Above is a content from internet. **Rewrite** it as a professional article (like The Economist article). Here are the key requirements:
@@ -85,10 +100,14 @@ write_article = PromptTemplate.from_template(
 
     Output directly below this line, without any explanation.
     """
-) | model | c
+    )
+    | model
+    | c
+)
 
-format_markdown = PromptTemplate.from_template(
-    """
+format_markdown = (
+    PromptTemplate.from_template(
+        """
     {content}
     ---
     Above is a markdown content. **Format** it to a more readable markdown content. Here are the key requirements:
@@ -99,4 +118,7 @@ format_markdown = PromptTemplate.from_template(
     - Make each section format aligned.
     Output directly below this line, without any explanation and xml tags.
     """
-) | model | c
+    )
+    | model
+    | c
+)

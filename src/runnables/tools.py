@@ -7,8 +7,10 @@ import json
 
 from ..core.models import get_hf_whisper_large_v3_turbo
 
+
 def created_at(_):
-    return time.strftime('%Y-%m-%d %H:%M:%S %z')
+    return time.strftime("%Y-%m-%d %H:%M:%S %z")
+
 
 def get_video(url, output_dir):
     """
@@ -22,7 +24,7 @@ def get_video(url, output_dir):
         ValueError: If the video file extension is not found in the command output.
     """
 
-    url = url.split('?')[0].strip('/\\').strip('/')
+    url = url.split("?")[0].strip("/\\").strip("/")
 
     os.makedirs(output_dir, exist_ok=True)
     command = f"you-get -o {output_dir} '{url}'"
@@ -38,6 +40,7 @@ def get_video(url, output_dir):
         raise ValueError(stderr)
     return os.path.join(output_dir, file_name)
 
+
 def extract_audio(video_path):
     """
     Extract the audio from a video file.
@@ -48,9 +51,14 @@ def extract_audio(video_path):
     audio_path = os.path.splitext(video_path)[0] + ".wav"
     if os.path.exists(audio_path):
         return audio_path
-    command = f"ffmpeg -i {video_path} -vn -acodec pcm_s16le -ar 44100 -ac 2 {audio_path}"
-    subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    command = (
+        f"ffmpeg -i {video_path} -vn -acodec pcm_s16le -ar 44100 -ac 2 {audio_path}"
+    )
+    subprocess.run(
+        command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+    )
     return audio_path
+
 
 def transcript(audio_path):
     """
@@ -67,6 +75,7 @@ def transcript(audio_path):
     transcript = "".join([chunk["text"] for chunk in chunks])
     return transcript
 
+
 def extract_title_from_path(path):
     """
     Extract the title from a file path.
@@ -79,6 +88,7 @@ def extract_title_from_path(path):
     title, _ = os.path.splitext(file_name)
     return title
 
+
 def clean_temp_files(inputs):
     """
     Clean up temporary files created during the process.
@@ -89,14 +99,16 @@ def clean_temp_files(inputs):
         if key.endswith("_path") and os.path.exists(value):
             os.remove(value)
 
+
 def write_to_file(inputs):
     output_dir = inputs["output_dir"]
     file_name = os.path.join(output_dir, inputs["title"] + ".json")
     content = {k: v for k, v in inputs.items() if k != "output_dir"}
-    with open(file_name, 'w') as f:
+    with open(file_name, "w") as f:
         f.write(json.dumps(content, indent=4, ensure_ascii=False))
     return inputs
 
+
 def load_from_file(file_path):
-    with open(file_path, 'r') as f:
+    with open(file_path, "r") as f:
         return json.load(f)

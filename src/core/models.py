@@ -5,6 +5,7 @@ from ..utils import get_config
 
 config = get_config()
 
+
 def get_azure_chat_openai(**kwargs):
     model = AzureChatOpenAI(
         azure_endpoint=config.azure_openai_endpoint,
@@ -14,6 +15,7 @@ def get_azure_chat_openai(**kwargs):
         **kwargs,
     )
     return model
+
 
 def get_hf_whisper_large_v3_turbo(**kwargs):
     model = pipeline(
