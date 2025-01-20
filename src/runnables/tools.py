@@ -30,7 +30,7 @@ def get_video(url, output_dir):
     command = f"you-get -o {output_dir} '{url}'"
     result = subprocess.run(command, shell=True, capture_output=True)
     stdout, stderr = result.stdout.decode(), result.stderr.decode()
-    file_name = re.search(r"([^\s]+\.(mp4|webm))", stdout + stderr)
+    file_name = re.search(r"(/.+\.(mp4|webm))", stdout + stderr)
     if file_name:
         file_name = file_name.group(1)
     else:
@@ -52,7 +52,7 @@ def extract_audio(video_path):
     if os.path.exists(audio_path):
         return audio_path
     command = (
-        f"ffmpeg -i {video_path} -vn -acodec pcm_s16le -ar 44100 -ac 2 {audio_path}"
+        f"ffmpeg -i '{video_path}' -vn -acodec pcm_s16le -ar 44100 -ac 2 '{audio_path}'"
     )
     subprocess.run(
         command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
