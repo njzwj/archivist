@@ -38,8 +38,6 @@ chain = (
     )
     | RunnablePassthrough.assign(
         tags=extract_tags,
-    )
-    | RunnablePassthrough.assign(
         title=clean_temp_files,
     )
     | RunnablePassthrough.assign(

@@ -3,6 +3,11 @@ import os
 import re
 from datetime import datetime, timedelta
 import json
+from langchain_core.runnables import (
+    RunnablePassthrough,
+    RunnableLambda,
+)
+from operator import itemgetter
 
 from ..utils.config import get_config
 from ..utils.decorators import timer, count_tokens
@@ -79,6 +84,30 @@ def summarize_with_cache(d, start_time, language):
         d = {**d, cache_key: summarized}
 
     return d
+
+
+chain = (
+    {
+        "start_time": lambda inputs: start_time(inputs["time"]),
+        "files": lambda inputs: load_json_paths(inputs["input_dir"]),
+        "output_file": itemgetter("output_file"),
+        "language": itemgetter("language"),
+    }
+    | RunnablePassthrough.assign(
+        data=lambda inputs: [
+            summarize_with_cache(
+                load_from_file(f), inputs["start_time"], language=inputs["language"]
+            )
+            for f in inputs["files"]
+        ],
+    )
+    | RunnablePassthrough.assign(
+        data=lambda inputs: [d for d in inputs["data"] if d is not None],
+    )
+    | RunnablePassthrough.assign(
+        data=lambda inputs: sorted(inputs["data"], key=lambda x: x["created_at"]),
+    )
+)
 
 
 @timer()
