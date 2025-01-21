@@ -11,6 +11,7 @@ from src.runnables.tools import (
 )
 from src.runnables.prompts import refine_transcript, extract_tags
 import argparse
+import re
 
 from ..utils.config import get_config
 from ..utils.decorators import timer, count_tokens
@@ -34,10 +35,10 @@ chain = (
         transcript=lambda inputs: transcript(inputs["audio_path"]),
     )
     | RunnablePassthrough.assign(
-        transcript=refine_transcript,
+        transcript=refine_transcript.with_retry(stop_after_attempt=3),
     )
     | RunnablePassthrough.assign(
-        tags=extract_tags,
+        tags=extract_tags.with_retry(stop_after_attempt=3),
         title=clean_temp_files,
     )
     | RunnablePassthrough.assign(
@@ -84,7 +85,8 @@ def clean_url(url):
 @timer()
 @count_tokens()
 def get_wrapper(url, output_dir):
-    url = clean_url(url)
+    if re.search(r"bilibili", url):
+        url = clean_url(url)
     for site in video_sites:
         if site in url:
             return chain.invoke(

@@ -12,6 +12,31 @@ def created_at(_):
     return time.strftime("%Y-%m-%d %H:%M:%S %z")
 
 
+def extract_downloaded_file_path(output, output_dir):
+    r = r"title:\s+(.+)\n"
+    ext_r = r"\.(mp4|webm)"
+
+    title = re.search(r, output)
+    if title:
+        title = title.group(1)
+    else:
+        title = None
+        raise ValueError(f"Cannot extract video title from {output}")
+
+    # find file name from output directory
+    file_name = None
+    for root, _, files in os.walk(output_dir):
+        for file in files:
+            if title in file:
+                if re.search(ext_r, file):
+                    file_name = os.path.join(root, file)
+                else:
+                    os.remove(os.path.join(root, file))
+    if file_name:
+        return file_name
+    raise ValueError(f"Cannot find downloaded video file in {output_dir}")
+
+
 def get_video(url, output_dir):
     """
     Downloads a video from the given URL and saves it to the specified output directory.
@@ -24,21 +49,12 @@ def get_video(url, output_dir):
         ValueError: If the video file extension is not found in the command output.
     """
 
-    url = url.split("?")[0].strip("/\\").strip("/")
-
     os.makedirs(output_dir, exist_ok=True)
     command = f"you-get -o {output_dir} '{url}'"
     result = subprocess.run(command, shell=True, capture_output=True)
     stdout, stderr = result.stdout.decode(), result.stderr.decode()
-    file_name = re.search(r"(/.+\.(mp4|webm))", stdout + stderr)
-    if file_name:
-        file_name = file_name.group(1)
-    else:
-        file_name = None
-    exts = re.findall(r"\.(mp4|webm)", stdout + stderr)
-    if not exts:
-        raise ValueError(stderr)
-    return os.path.join(output_dir, file_name)
+    file_name = extract_downloaded_file_path(stdout + stderr, output_dir)
+    return file_name
 
 
 def extract_audio(video_path):
