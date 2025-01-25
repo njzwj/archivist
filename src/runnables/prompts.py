@@ -85,6 +85,7 @@ write_article = (
     - Papagraphs should be informative, not too scattered.
     - Reorganize if needed, better order, flow and coherence.
     - Write using {language}. For names, terms you cannot infer, keep them in the original language.
+    - Contain subtle details in the original content. Don't over simplify.
     Format requirements:
     - Summarize keypoints briefly in the beginning, in lists and bullet points.
     - Rewrite the main content in paragraphs.
