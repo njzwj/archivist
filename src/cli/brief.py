@@ -134,12 +134,13 @@ def summarize_wrapper(time, input_dir, output_file):
     ]
     for d in data:
         lines.append("\n---\n")
-        lines.append(f'## {d["title"]}')
-        lines.append(f'来源 [{d["title"]}]({d["url"]})')
-        lines.append(f'获取时间: {d["created_at"]}')
+        lines.append(f'\n## {d["title"]}')
+        lines.append(f'\n来源 [{d["title"]}]({d["url"]})')
+        lines.append(f'\n获取时间: {d["created_at"]}')
         lines.append("\n" + d["briefing"])
 
-    formatted = format_markdown.invoke({"content": "\n".join(lines)})
+    # formatted = format_markdown.invoke({"content": "\n".join(lines)})
+    formatted = "\n".join(lines)
     with open(output_file, "w") as f:
         f.write(formatted)
 
