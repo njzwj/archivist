@@ -79,6 +79,7 @@ def summarize_with_cache(d, start_time, language):
     if not test_start_time(start_time, created_at):
         return None
 
+    refresh=False
     if cache_key not in d or refresh:
         summarized = write_article.invoke({**d, "language": language})
         d = {**d, cache_key: summarized}
