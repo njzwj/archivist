@@ -38,3 +38,7 @@ input_dir, default is ./results
 time, like 1 day, 2 day, 1 week, 1 month. default is 3 day.
 
 Output a briefing to output file sort by time.
+
+## TODO
+
+[] Add cookie.
