@@ -32,8 +32,9 @@ def search_cookies_firefox(path):
     # traverse and find path/*.default/cookies.sqlite
     for root, dirs, files in os.walk(path):
         for dir in dirs:
-            if dir.endswith(".default"):
-                return os.path.join(root, dir, "cookies.sqlite")
+            if dir.endswith(".default") or dir.endswith(".default-release"):
+                if os.path.exists(os.path.join(root, dir, "cookies.sqlite")):
+                    return os.path.join(root, dir, "cookies.sqlite")
     return None
 
 
@@ -43,7 +44,7 @@ def load_cookies_platform(paths):
         p = os.path.expanduser(path)
         if os.path.exists(p):
             if browser == "firefox":
-                path = search_cookies_firefox(path)
+                p = search_cookies_firefox(p)
                 return p
     return None
 
