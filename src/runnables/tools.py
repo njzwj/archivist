@@ -1,11 +1,11 @@
 import os
 import re
 import subprocess
-import datetime
 import time
 import json
 
 from ..core.models import get_hf_whisper_large_v3_turbo
+from ..utils.config import load_cookies
 
 
 def created_at(_):
@@ -49,8 +49,16 @@ def get_video(url, output_dir):
         ValueError: If the video file extension is not found in the command output.
     """
 
+    cookies = None
+    try:
+        cookies = load_cookies()
+    except FileNotFoundError:
+        pass
+
     os.makedirs(output_dir, exist_ok=True)
     command = f"you-get -o {output_dir} '{url}'"
+    if cookies:
+        command += f" -c '{cookies}'"
     result = subprocess.run(command, shell=True, capture_output=True)
     stdout, stderr = result.stdout.decode(), result.stderr.decode()
     file_name = extract_downloaded_file_path(stdout + stderr, output_dir)
