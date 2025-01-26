@@ -42,4 +42,5 @@ Output a briefing to output file sort by time.
 ## TODO
 
 ~~[] Add cookie.~~ Tried, didn't work since I'm blocked by y2b (access y2b by DC)
-
+[] Add select, filter and search for briefing.
+[] Better output, file name, etc.
