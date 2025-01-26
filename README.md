@@ -41,4 +41,5 @@ Output a briefing to output file sort by time.
 
 ## TODO
 
-[] Add cookie.
+~~[] Add cookie.~~ Tried, didn't work since I'm blocked by y2b (access y2b by DC)
+
