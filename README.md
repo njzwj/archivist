@@ -1,46 +1,48 @@
 # LLM Pipeline
 
-## Get
+This project is designed to:
 
-Get contents from a web page, including the video transcript.
+1. **Manage Consumed Content**: Initially, it handles videos from public platforms like Bilibili and YouTube. Future updates will expand to other types of information.
+2. **Streamline and Process Data**: It offers flexible processing capabilities, including:
+   - **Tagging**
+   - **Summarizing**
+   - **Generating valuable ideas and insights**
+3. **Extensible Capabilities**: The system is built to be easily extended with simple mechanisms.
 
+## Usage Instructions
 
+1. **Install Conda**: Ensure Conda is installed on your system.
+2. **Set Up Environment**: Create a new Conda environment and install the required packages.
 
-## Transcript
+This project utilizes Hugging Face's Whisper for transcription tasks.
 
-Transcribe a video from a given URL.
-Usage:
+### Environment Configuration
+
+Place your `.env` file in your user directory: `~/.power-llm.env`, and fill in the necessary environment variables. By default, the environment path is `~/.power-llm.env`, but you can specify a different path by setting the `POWER_LLM_ENV_PATH` environment variable.
+
+The output directory is also specified in this `.env` file.
+
+### Fetching Video Transcripts
+
+To obtain a transcript of any video, use the following command:
+
+```bash
+get 'https://www.youtube.com/...' [output-dir]
 ```
-    python pipelines/transcript.py <video_url> [<output_dir>]
-```
-`<video_url>`: The URL
-`<output_dir>`: The directory to write the transcript to. Default is the current directory.
 
-Ouptut:
+This command saves a JSON file named after the video title in the specified output directory. If `output-dir` is omitted, the file is saved in the default directory.
 
-A JSON file containing the transcript of the video.
+### Generating a Brief
 
-    - url: The URL of the video.
-    - title: The title of the video.
-    - created_at: The timestamp when the transcript was created.
-    - transcription: The transcript of the video.
-    - transcription_chunks: The transcript chunks with timestamps.
+*Note: This feature is slated for deprecation and is currently not recommended for use.*
 
-## Summarize
+## Future Enhancements
 
-Auto extract summarize and briefing based on conditions.
-Usage:
-```
-python pipelines/summarize.py -i <input_dir> -t <time> -o <output_file>
-```
-input_dir, default is ./results
+- ~~[] Add cookie support.~~ *Attempted but unsuccessful due to YouTube access restrictions via DC.*
+- [] Develop a new tool, `mpipe` (short for map pipe), to handle all tagging, rewriting, summarizing, etc. This tool will process all saved files, modifying or adding keys based on existing data, and then save the changes back to disk. This functionality is akin to the map function in map-reduce but tailored for LLM pipelines.
+- [] Create a display tool named `brief` to showcase all abstracted information saved. This could be a local web server that renders the data into a user-friendly website.
 
-time, like 1 day, 2 day, 1 week, 1 month. default is 3 day.
+## References
 
-Output a briefing to output file sort by time.
-
-## TODO
-
-~~[] Add cookie.~~ Tried, didn't work since I'm blocked by y2b (access y2b by DC)
-[] Add select, filter and search for briefing.
-[] Better output, file name, etc.
+- **You-Get**: An excellent tool for this application.
+- **Hugging Face**: User-friendly and highly effective for our needs.
