@@ -1,9 +1,16 @@
 from collections import deque
 from typing import List, Callable, Set
 
+
 class Pipeline:
 
-    def __init__(self, name: str, input_keys: List[str], output_keys: List[str], process: Callable[[dict, dict], dict]):
+    def __init__(
+        self,
+        name: str,
+        input_keys: List[str],
+        output_keys: List[str],
+        process: Callable[[dict, dict], dict],
+    ):
         """
         Initialize a new pipeline instance.
         Args:
@@ -36,7 +43,7 @@ class Pipeline:
         Returns:
             list: A list of input keys.
         """
-        
+
         return self.input_keys
 
     def get_output_keys(self):
@@ -47,6 +54,7 @@ class Pipeline:
         """
 
         return self.output_keys
+
 
 class PipelineOrchestrator:
 
@@ -64,7 +72,7 @@ class PipelineOrchestrator:
 
         if self._check_pipeline_validity(pipeline):
             self.pipelines.append(pipeline)
-    
+
     def process(self, name: str, inputs: dict, **kwargs) -> dict:
         """
         Processes the given inputs using the specified pipeline.
@@ -91,25 +99,37 @@ class PipelineOrchestrator:
     def _check_pipeline_validity(self, pipeline: Pipeline) -> bool:
         for p in self.pipelines:
             if p.name == pipeline.name:
-                raise ValueError(f"Pipeline with name '{pipeline.name}' already exists.")
-            
+                raise ValueError(
+                    f"Pipeline with name '{pipeline.name}' already exists."
+                )
+
         # multiple same output keys causes dependency issues
         for p in self.pipelines:
             for key in p.output_keys:
                 if key in pipeline.output_keys:
-                    raise ValueError(f"Output key '{key}' already exists in another pipeline.")
-        
+                    raise ValueError(
+                        f"Output key '{key}' already exists in another pipeline."
+                    )
+
         # use DFS searching for dependency loop
         stack = []
         visited = set()
         pipelines = self.pipelines + [pipeline]
         for p in pipelines:
-            if p.name not in visited and self._check_pipeline_loop(stack, visited, p, pipelines):
+            if p.name not in visited and self._check_pipeline_loop(
+                stack, visited, p, pipelines
+            ):
                 raise ValueError(f"Pipeline '{p.name}' has a dependency loop.")
 
         return True
 
-    def _check_pipeline_loop(self, stack: List[str], visited: Set[str], pipeline: Pipeline, pipelines: List[Pipeline]) -> bool:
+    def _check_pipeline_loop(
+        self,
+        stack: List[str],
+        visited: Set[str],
+        pipeline: Pipeline,
+        pipelines: List[Pipeline],
+    ) -> bool:
         stack.append(pipeline.name)
         visited.add(pipeline.name)
         keys = pipeline.output_keys

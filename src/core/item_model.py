@@ -1,6 +1,7 @@
 import os
 import json
 
+
 class ItemModel:
 
     def __init__(self, data, file_path=None):
@@ -12,13 +13,13 @@ class ItemModel:
             file_path = self.file_path
         with open(file_path, "w") as f:
             json.dump(self.data, f, ensure_ascii=False, indent=2, **kwargs)
-    
+
     def keys(self):
         return self.data.keys()
-    
+
     def __getitem__(self, key):
         return self.data[key]
-    
+
     def __setitem__(self, key, value):
         self.data[key] = value
 

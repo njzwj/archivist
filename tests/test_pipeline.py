@@ -2,6 +2,7 @@ import pytest
 
 from src.core.pipeline import Pipeline, PipelineOrchestrator
 
+
 def test_pipeline():
     def process(inputs: dict, **kwargs) -> dict:
         return inputs
@@ -13,6 +14,7 @@ def test_pipeline():
     inputs = {"input": "test"}
     result = orchestrator.process("test", inputs)
     assert result == inputs
+
 
 def test_pipeline_with_loop():
     def process(inputs: dict, **kwargs) -> dict:
@@ -27,10 +29,11 @@ def test_pipeline_with_loop():
     with pytest.raises(ValueError):
         orchestrator.register(p3)
 
+
 def test_pipeline_call_generate():
     def p1(inputs: dict, **kwargs) -> dict:
         return {**inputs, "j": inputs["i"] + 1}
-    
+
     def p2(inputs: dict, **kwargs) -> dict:
         return {**inputs, "k": inputs["j"] + 1}
 
