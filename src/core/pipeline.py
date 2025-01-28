@@ -1,8 +1,9 @@
 from collections import deque
+from typing import List, Callable, Set
 
 class Pipeline:
 
-    def __init__(self, name: str, input_keys: list[str], output_keys: list[str], process: callable[dict, dict, dict]):
+    def __init__(self, name: str, input_keys: List[str], output_keys: List[str], process: Callable[[dict, dict], dict]):
         """
         Initialize a new pipeline instance.
         Args:
@@ -93,29 +94,31 @@ class PipelineOrchestrator:
                 raise ValueError(f"Pipeline with name '{pipeline.name}' already exists.")
             
         # multiple same output keys causes dependency issues
-        for key in pipeline.output_keys:
-            if key in pipeline.output_keys:
-                raise ValueError(f"Output key '{key}' already exists in another pipeline.")
+        for p in self.pipelines:
+            for key in p.output_keys:
+                if key in pipeline.output_keys:
+                    raise ValueError(f"Output key '{key}' already exists in another pipeline.")
         
         # use DFS searching for dependency loop
         stack = []
         visited = set()
-        for p in self.pipelines:
-            if p.name not in visited and self._check_pipeline_loop(stack, visited, p):
+        pipelines = self.pipelines + [pipeline]
+        for p in pipelines:
+            if p.name not in visited and self._check_pipeline_loop(stack, visited, p, pipelines):
                 raise ValueError(f"Pipeline '{p.name}' has a dependency loop.")
 
         return True
 
-    def _check_pipeline_loop(self, stack: list[str], visited: set[str], pipeline: Pipeline) -> bool:
+    def _check_pipeline_loop(self, stack: List[str], visited: Set[str], pipeline: Pipeline, pipelines: List[Pipeline]) -> bool:
         stack.append(pipeline.name)
         visited.add(pipeline.name)
-        for key in pipeline.output_keys:
-            for p in self.pipelines:
-                if key in p.input_keys:
-                    if p.name in visited:
-                        return True
-                    if self._check_pipeline_loop(stack, visited, p):
-                        return True
+        keys = pipeline.output_keys
+        for p in pipelines:
+            if any(key in p.input_keys for key in keys):
+                if p.name in visited:
+                    return True
+                if self._check_pipeline_loop(stack, visited, p, pipelines):
+                    return True
         stack.pop()
         return False
 
