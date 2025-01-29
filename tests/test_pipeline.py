@@ -93,3 +93,16 @@ def test_process_missing_input():
     inputs = {"x": 1}
     with pytest.raises(ValueError):
         orchestrator.process("p1", inputs)
+
+
+def test_process_kwargs():
+    def process(inputs: dict, **kwargs) -> dict:
+        language = kwargs["language"]
+        return {**inputs, "j": inputs["i"] + language}
+    
+    p1 = Pipeline("p1", ["i"], ["j"], process)
+    orchestrator = PipelineOrchestrator()
+    orchestrator.register(p1)
+    inputs = {"i": "x"}
+    result = orchestrator.process("p1", inputs, language="y")
+    assert result == {"i": "x", "j": "xy"}
