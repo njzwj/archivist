@@ -9,7 +9,6 @@ from src.runnables.tools import (
     clean_temp_files,
     write_to_file,
 )
-from src.runnables.prompts import refine_transcript, extract_tags
 import argparse
 import re
 
@@ -35,10 +34,6 @@ chain = (
         transcript=lambda inputs: transcript(inputs["audio_path"]),
     )
     | RunnablePassthrough.assign(
-        transcript=refine_transcript.with_retry(stop_after_attempt=3),
-    )
-    | RunnablePassthrough.assign(
-        tags=extract_tags.with_retry(stop_after_attempt=3),
         title=clean_temp_files,
     )
     | RunnablePassthrough.assign(
