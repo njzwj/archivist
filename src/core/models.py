@@ -17,6 +17,13 @@ def get_azure_chat_openai(**kwargs):
     return model
 
 
+def get_chat_model(**kwargs):
+    """
+    Placeholder function for more chat models in the future.
+    """
+    return get_azure_chat_openai(**kwargs)
+
+
 def get_hf_whisper_large_v3_turbo(**kwargs):
     model = pipeline(
         "automatic-speech-recognition",
