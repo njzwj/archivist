@@ -87,8 +87,15 @@ class PipelineOrchestrator:
         chain = self._generate_chain(name)
         result = inputs
         for p in chain:
+            self._check_inputs(result, p)
             result = p.process(result, **kwargs)
         return result
+    
+    def _check_inputs(self, inputs: dict, pipeline: Pipeline) -> bool:
+        for key in pipeline.input_keys:
+            if key not in inputs:
+                raise ValueError(f"Input key '{key}' is missing.")
+        return
 
     def _find_pipeline(self, name: str) -> Pipeline:
         for p in self.pipelines:
@@ -136,7 +143,7 @@ class PipelineOrchestrator:
         for p in pipelines:
             if any(key in p.input_keys for key in keys):
                 if p.name in visited:
-                    return True
+                    return p.name in stack
                 if self._check_pipeline_loop(stack, visited, p, pipelines):
                     return True
         stack.pop()
