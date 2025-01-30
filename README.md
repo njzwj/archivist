@@ -1,48 +1,68 @@
 # LLM Pipeline
 
-This project is designed to:
+## Overview
 
-1. **Manage Consumed Content**: Initially, it handles videos from public platforms like Bilibili and YouTube. Future updates will expand to other types of information.
-2. **Streamline and Process Data**: It offers flexible processing capabilities, including:
+The LLM Pipeline is designed to efficiently manage and process consumed content, primarily from video platforms such as Bilibili and YouTube. Future updates will extend support to additional content types.
+
+### Key Features
+
+1. **Content Management**: Handles video content from public platforms, extracting and organizing information for further processing.
+2. **Data Processing**: Provides flexible processing capabilities, including:
    - **Tagging**
-   - **Summarizing**
-   - **Generating valuable ideas and insights**
-3. **Extensible Capabilities**: The system is built to be easily extended with simple mechanisms.
+   - **Summarization**
+   - **Idea and insight generation**
+3. **Extensibility**: Built with simple, modular mechanisms for easy expansion.
 
-## Usage Instructions
+## Installation and Setup
 
-1. **Install Conda**: Ensure Conda is installed on your system.
-2. **Set Up Environment**: Create a new Conda environment and install the required packages.
-
-This project utilizes Hugging Face's Whisper for transcription tasks.
+### Prerequisites
+- **Conda Installation**: Ensure Conda is installed on your system.
+- **Environment Setup**: Create a new Conda environment and install the required dependencies.
 
 ### Environment Configuration
+- Place the `.env` file in your user directory at `~/.power-llm.env`.
+- Define necessary environment variables within the `.env` file.
+- By default, the system reads from `~/.power-llm.env`, but you can specify a different path using the `POWER_LLM_ENV_PATH` environment variable.
+- The output directory is also specified within this `.env` file.
 
-Place your `.env` file in your user directory: `~/.power-llm.env`, and fill in the necessary environment variables. By default, the environment path is `~/.power-llm.env`, but you can specify a different path by setting the `POWER_LLM_ENV_PATH` environment variable.
+## Fetching Video Transcripts
 
-The output directory is also specified in this `.env` file.
-
-### Fetching Video Transcripts
-
-To obtain a transcript of any video, use the following command:
+To retrieve a transcript from a video, run the following command:
 
 ```bash
 get 'https://www.youtube.com/...' [output-dir]
 ```
 
-This command saves a JSON file named after the video title in the specified output directory. If `output-dir` is omitted, the file is saved in the default directory.
+- The transcript is saved as a JSON file, named after the video title.
+- If `output-dir` is omitted, the file is saved in the default directory.
 
-### Generating a Brief
+## Running Pipelines on Documents
 
-*Note: This feature is slated for deprecation and is currently not recommended for use.*
+Pipelines can be executed on existing documents to generate new summaries and insights. Usage:
+
+```bash
+mpipe pipeline [kwargs, [...]]
+```
+
+To generate tags for each document:
+
+```bash
+mpipe tag tags=learning,studying
+```
+
+To generate a briefing:
+
+```bash
+mpipe brief language=Japanese
+```
 
 ## Future Enhancements
 
-- ~~[] Add cookie support.~~ *Attempted but unsuccessful due to YouTube access restrictions via DC.*
-- [] Develop a new tool, `mpipe` (short for map pipe), to handle all tagging, rewriting, summarizing, etc. This tool will process all saved files, modifying or adding keys based on existing data, and then save the changes back to disk. This functionality is akin to the map function in map-reduce but tailored for LLM pipelines.
-- [] Create a display tool named `brief` to showcase all abstracted information saved. This could be a local web server that renders the data into a user-friendly website.
+- ~~[] Implement cookie support.~~ *Attempted but unsuccessful due to YouTube access restrictions via DC.*
+- [x] Develop `mpipe`, a tool for tagging, rewriting, summarizing, and modifying stored files.
+- [] Create `brief`, a display tool to showcase summarized content via a local web server with a user-friendly interface.
 
 ## References
 
-- **You-Get**: An excellent tool for this application.
-- **Hugging Face**: User-friendly and highly effective for our needs.
+- **You-Get**: A reliable tool for video content retrieval.
+- **Hugging Face**: A powerful and user-friendly NLP framework supporting various processing tasks.
