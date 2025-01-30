@@ -77,6 +77,7 @@ class Config:
     azure_openai_api_version = os.getenv("AZURE_OPENAI_API_VERSION")
     azure_openai_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
     power_llm_results_path = os.path.expanduser(os.getenv("POWER_LLM_RESULTS_PATH"))
+    tagging_categories = os.getenv("TAGGING_CATEGORIES", "")
 
 
 def get_config():

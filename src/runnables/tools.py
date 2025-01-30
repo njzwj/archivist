@@ -96,7 +96,7 @@ def transcript(audio_path):
     """
     pipe = get_hf_whisper_large_v3_turbo()
     chunks = pipe(audio_path, batch_size=4, return_timestamps=True)["chunks"]
-    transcript = "".join([chunk["text"] for chunk in chunks])
+    transcript = "\n".join([chunk["text"] for chunk in chunks])
     return transcript
 
 

@@ -44,7 +44,6 @@ chain = (
         "url": itemgetter("url"),
         "created_at": created_at,
         "title": itemgetter("title"),
-        "tags": itemgetter("tags"),
         "transcript": itemgetter("transcript"),
     }
     | write_to_file

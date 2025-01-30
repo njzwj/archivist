@@ -8,7 +8,7 @@ class ItemModel:
         self.data = data
         self.file_path = file_path
 
-    def save(self, file_path, **kwargs):
+    def save(self, file_path=None, **kwargs):
         if file_path is None:
             file_path = self.file_path
         with open(file_path, "w") as f:

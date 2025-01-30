@@ -10,6 +10,7 @@ setup(
         "console_scripts": [
             "get=src.cli:get",
             "brief=src.cli:brief",
+            "mpipe=src.cli:mpipe",
         ],
     },
 )
