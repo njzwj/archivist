@@ -1,6 +1,7 @@
 from collections import deque
 from typing import List, Callable, Set
 import textwrap
+import json
 
 
 class Pipeline:
@@ -92,7 +93,13 @@ class PipelineOrchestrator:
         result = inputs
         for p in chain:
             self._check_inputs(result, p)
-            result = p.process(result, **kwargs)
+            try:
+                result = p.process(result, **kwargs)
+            except Exception as e:
+                digest = textwrap.shorten(json.dumps(inputs), width=80)
+                raise RuntimeError(
+                    f"Error processing pipeline '{p.name}', on {digest}\n{e}"
+                )
         return result
 
     def list_pipelines(self) -> List[str]:

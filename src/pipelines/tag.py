@@ -18,8 +18,9 @@ def c(inputs):
 summarize_chain = (
     PromptTemplate.from_template(
         """
+    ```
     {object}
-    ---
+    ```
     Above is a piece of information pulled and processed from the internet.
     Summarize the content in a few sentences. The topic and key points should be clear. No more than 200 words.
     Write directly below this line without any additional explanation.
@@ -33,8 +34,10 @@ summarize_chain = (
 tagging_chain = (
     PromptTemplate.from_template(
         """
+    Content:
+    ```
     {inputs}
-    ---
+    ```
     **Task:** Tag the provided content.
     Output the tags in a specific format, for example:
     
@@ -51,6 +54,8 @@ tagging_chain = (
     1,0,0,1
     Because there are only 3 tags available, so the output should be 3 digits.
     1,0,0 is the correct output.
+
+    So the output should be comma separated 0s and 1s only. And MUST be in the same order and same number as the available tags.
 
     because the output will be processed by splitting the string by comma, output direct after this line of prompt, without any additional explanation. Available tags are: [{tags}]. You can choose one or multiple tags. Make sure to output in the correct format.
     """

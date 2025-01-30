@@ -12,8 +12,10 @@ def c(inputs):
 write_brief_chain = (
     PromptTemplate.from_template(
         """
+    Transcript:
+    ```
     {transcript}
-    ---
+    ```
 
     Task: Rewrite the provided transcript above into a professional article, similar in style to *The Economist*. In **{language}**.
 
@@ -43,22 +45,6 @@ write_brief_chain = (
     Body
 
     - Place the final rewritten article **directly below** this prompt—without any additional explanation.
-    """
-    )
-    | model
-    | c
-)
-
-
-translate_chain = (
-    PromptTemplate.from_template(
-        """
-    Translate the following content into **{language}**.
-    ---
-    {inputs}
-    ---
-    Translate the above content into **{language}**. Retain original terms/names when meaning is unclear.
-    Write directly below this line, without any additional explanation.
     """
     )
     | model
