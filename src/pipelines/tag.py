@@ -80,9 +80,20 @@ def tag_content(inputs: dict, **kwargs) -> dict:
     return {**inputs, "tags": tags}
 
 
+description_string = """Tagging pipeline for content to "tags" key.
+
+Arguments:
+
+    tags: the available tags for the content.
+        Comma separated tags.
+        Default is set by environment variable TAGGING_CATEGORIES.
+"""
+
+
 tag_pipeline = Pipeline(
     name="tag",
     input_keys=["title"],
     output_keys=["tags"],
+    description=description_string,
     process=tag_content,
 )

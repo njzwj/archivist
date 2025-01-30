@@ -76,6 +76,20 @@ def write_brief(inputs: dict, **kwargs) -> dict:
     return {**inputs, "briefing": brief}
 
 
+description_string = """Brief transcript to an article to "briefing" key.
+Will skip if "briefing" key already exists.
+
+Arguments:
+
+    language: the target langugage to write the article in.
+        Default "original language".
+"""
+
+
 brief_pipeline = Pipeline(
-    name="brief", input_keys=["transcript"], output_keys=["brief"], process=write_brief
+    name="brief",
+    input_keys=["transcript"],
+    output_keys=["brief"],
+    description=description_string,
+    process=write_brief,
 )

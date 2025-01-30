@@ -1,5 +1,6 @@
 from collections import deque
 from typing import List, Callable, Set
+import textwrap
 
 
 class Pipeline:
@@ -9,6 +10,7 @@ class Pipeline:
         name: str,
         input_keys: List[str],
         output_keys: List[str],
+        description: str,
         process: Callable,
     ):
         """
@@ -17,12 +19,14 @@ class Pipeline:
             name (str): The name of the pipeline.
             input_keys (list[str]): A list of keys for the input data.
             output_keys (list[str]): A list of keys for the output data.
+            description (str): A description of the pipeline.
             process (callable): A callable that processes the data. It should accept three dictionaries as arguments and return a dictionary.
         """
 
         self.name = name
         self.input_keys = input_keys
         self.output_keys = output_keys
+        self.description = description
         self.process = process
 
     def process(self, inputs: dict, **kwargs) -> dict:
@@ -99,6 +103,21 @@ class PipelineOrchestrator:
         """
 
         return [p.name for p in self.pipelines]
+
+    def pipeline_help_string(self) -> str:
+        """
+        Generate a help string for all registered pipelines.
+        Returns:
+            str: A help string containing information about all registered pipelines.
+        """
+
+        help_string = []
+        for p in self.pipelines:
+            help_string.append(p.name)
+            help_string.append(textwrap.indent(p.description, " " * 4))
+            help_string.append("")
+        help = "\n".join(help_string)
+        return help
 
     def _check_inputs(self, inputs: dict, pipeline: Pipeline) -> bool:
         for key in pipeline.input_keys:

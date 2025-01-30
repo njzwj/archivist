@@ -11,14 +11,22 @@ from ..utils.decorators import timer, count_tokens
 config = get_config()
 
 
+help_string = """Run specific pipelines that output the results to the original file.
+
+    mpipe tag tags=economy,technology,history,lecture,life
+    mpipe brief language=kolingon
+"""
+
+
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Run specific pipelines that output the results to the original file."
+        description=help_string,
+        formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.add_argument(
         "pipeline",
         type=str,
-        help="The pipeline to run",
+        help="The pipeline to run\n" + orchestrator.pipeline_help_string(),
         choices=orchestrator.list_pipelines(),
     )
     parser.add_argument(
