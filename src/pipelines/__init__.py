@@ -6,6 +6,4 @@ orchestrator = PipelineOrchestrator()
 orchestrator.register(brief_pipeline)
 orchestrator.register(tag_pipeline)
 
-__all__ = [
-    "orchestrator"
-]
+__all__ = ["orchestrator"]

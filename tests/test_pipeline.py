@@ -55,16 +55,16 @@ def test_process_branch():
 
     def p2(inputs: dict, **kwargs) -> dict:
         return {**inputs, "k": inputs["i"] * 2}
-    
+
     def p3(inputs: dict, **kwargs) -> dict:
         return {**inputs, "l": inputs["j"] * 3 + inputs["k"]}
-    
+
     def p4(inputs: dict, **kwargs) -> dict:
         return {**inputs, "m": inputs["l"] * 2}
-    
+
     def p5(inputs: dict, **kwargs) -> dict:
         return {**inputs, "n": inputs["l"] * 3}
-    
+
     p1 = Pipeline("p1", ["i"], ["j"], p1)
     p2 = Pipeline("p2", ["i"], ["k"], p2)
     p3 = Pipeline("p3", ["j", "k"], ["l"], p3)
@@ -86,7 +86,7 @@ def test_process_branch():
 def test_process_missing_input():
     def process(inputs: dict, **kwargs) -> dict:
         return {**inputs, "j": inputs["i"] + 1}
-    
+
     p1 = Pipeline("p1", ["i"], ["j"], process)
     orchestrator = PipelineOrchestrator()
     orchestrator.register(p1)
@@ -99,7 +99,7 @@ def test_process_kwargs():
     def process(inputs: dict, **kwargs) -> dict:
         language = kwargs["language"]
         return {**inputs, "j": inputs["i"] + language}
-    
+
     p1 = Pipeline("p1", ["i"], ["j"], process)
     orchestrator = PipelineOrchestrator()
     orchestrator.register(p1)

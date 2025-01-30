@@ -90,7 +90,7 @@ class PipelineOrchestrator:
             self._check_inputs(result, p)
             result = p.process(result, **kwargs)
         return result
-    
+
     def list_pipelines(self) -> List[str]:
         """
         List the names of all registered pipelines.
@@ -99,7 +99,7 @@ class PipelineOrchestrator:
         """
 
         return [p.name for p in self.pipelines]
-    
+
     def _check_inputs(self, inputs: dict, pipeline: Pipeline) -> bool:
         for key in pipeline.input_keys:
             if key not in inputs:

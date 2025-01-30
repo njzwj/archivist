@@ -23,7 +23,8 @@ summarize_chain = (
     Above is a piece of information pulled and processed from the internet.
     Summarize the content in a few sentences. The topic and key points should be clear. No more than 200 words.
     Write directly below this line without any additional explanation.
-    """)
+    """
+    )
     | model
     | c
 )
@@ -52,7 +53,8 @@ tagging_chain = (
     1,0,0 is the correct output.
 
     because the output will be processed by splitting the string by comma, output direct after this line of prompt, without any additional explanation. Available tags are: [{tags}]. You can choose one or multiple tags. Make sure to output in the correct format.
-    """)
+    """
+    )
     | model
     | c
 )
@@ -61,7 +63,9 @@ tagging_chain = (
 def tag_content(inputs: dict, **kwargs) -> dict:
     if "tags" not in kwargs:
         kwargs["tags"] = config.tagging_categories
-        warnings.warn("Tags not provided, default is set by environment variable TAGGING_CATEGORIES")
+        warnings.warn(
+            "Tags not provided, default is set by environment variable TAGGING_CATEGORIES"
+        )
     available_tags = kwargs["tags"]
     obj = json.dumps(inputs, ensure_ascii=False)
     summary = summarize_chain.invoke({"object": obj})
@@ -70,7 +74,7 @@ def tag_content(inputs: dict, **kwargs) -> dict:
     available_tags = available_tags.split(",")
     tags = tags.split(",")
     if len(available_tags) > len(tags):
-        available_tags = available_tags[:len(tags)]
+        available_tags = available_tags[: len(tags)]
     tags = [int(tag) for tag in tags]
     tags = [tag for i, tag in enumerate(available_tags) if tags[i] == 1]
     return {**inputs, "tags": tags}

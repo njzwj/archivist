@@ -61,7 +61,5 @@ def write_brief(inputs: dict, **kwargs) -> dict:
 
 
 brief_pipeline = Pipeline(
-    name="brief",
-    input_keys=["transcript"],
-    output_keys=["brief"],
-    process=write_brief)
+    name="brief", input_keys=["transcript"], output_keys=["brief"], process=write_brief
+)

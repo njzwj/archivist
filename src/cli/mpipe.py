@@ -10,6 +10,7 @@ from ..utils.decorators import timer, count_tokens
 
 config = get_config()
 
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Run specific pipelines that output the results to the original file."
@@ -30,8 +31,10 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+
 def parse_arguments(args: List[str]) -> dict:
     return dict(arg.split("=", 1) for arg in args)
+
 
 def run_pipeline_on(path: str, pipeline: str, **kwargs):
     item = ItemModel.from_file(path)
@@ -40,6 +43,7 @@ def run_pipeline_on(path: str, pipeline: str, **kwargs):
     if results != item.data:
         item.data = results
         item.save()
+
 
 @timer()
 @count_tokens()
@@ -52,6 +56,7 @@ def mpipe_wrapper():
     json_files = [file for file in os.listdir(path) if file.endswith(".json")]
     for file in tqdm(json_files, desc="Processing files"):
         run_pipeline_on(os.path.join(path, file), args.pipeline, **kwargs)
+
 
 def mpipe():
     mpipe_wrapper()
