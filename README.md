@@ -58,9 +58,10 @@ mpipe brief language=Japanese
 
 ## Future Enhancements
 
-- ~~[] Implement cookie support.~~ *Attempted but unsuccessful due to YouTube access restrictions via DC.*
-- [x] Develop `mpipe`, a tool for tagging, rewriting, summarizing, and modifying stored files.
-- [] Create `brief`, a display tool to showcase summarized content via a local web server with a user-friendly interface.
+- ~~Implement cookie support~~: *Attempted but unsuccessful due to YouTube access restrictions via DC.*
+- [x] Developed `mpipe`: A tool for tagging, rewriting, summarizing, and modifying stored files.
+- [] Add `Serve`: A server tool to display categorized pages for viewing collected content.
+
 
 ## References
 

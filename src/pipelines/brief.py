@@ -62,13 +62,12 @@ def write_brief(inputs: dict, **kwargs) -> dict:
     return {**inputs, "briefing": brief}
 
 
-description_string = """Brief transcript to an article to "briefing" key.
-Will skip if "briefing" key already exists.
+description_string = """Create a brief transcript of the article and save it under the "briefing" key.
+Skips if the "briefing" key already exists.
 
 Arguments:
-
-    language: the target langugage to write the article in.
-        Default "original language".
+  language    The language for the brief (default: original language).
+              Example: "kolingon" or "english".
 """
 
 

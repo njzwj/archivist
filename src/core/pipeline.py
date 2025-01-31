@@ -118,12 +118,15 @@ class PipelineOrchestrator:
             str: A help string containing information about all registered pipelines.
         """
 
-        help_string = []
+        help = ["\n"]
+
         for p in self.pipelines:
-            help_string.append(p.name)
-            help_string.append(textwrap.indent(p.description, " " * 4))
-            help_string.append("")
-        help = "\n".join(help_string)
+            name, description = p.name, p.description
+            help_block = f"{name:<12} {description.splitlines()[0]}\n"
+            for line in description.splitlines()[1:]:
+                help_block += f"{'':<12} {line}\n"
+            help.append(help_block)
+        help = "\n\n".join(help)
         return help
 
     def _check_inputs(self, inputs: dict, pipeline: Pipeline) -> bool:

@@ -11,11 +11,7 @@ from ..utils.decorators import timer, count_tokens
 config = get_config()
 
 
-help_string = """Run specific pipelines that output the results to the original file.
-
-    mpipe tag tags=economy,technology,history,lecture,life
-    mpipe brief language=kolingon
-"""
+help_string = """Run specific pipelines and output the results to the original file."""
 
 
 def parse_args():

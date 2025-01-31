@@ -85,13 +85,11 @@ def tag_content(inputs: dict, **kwargs) -> dict:
     return {**inputs, "tags": tags}
 
 
-description_string = """Tagging pipeline for content to "tags" key.
+description_string = """Tag the content and save it under the "tags" key.
 
 Arguments:
-
-    tags: the available tags for the content.
-        Comma separated tags.
-        Default is set by environment variable TAGGING_CATEGORIES.
+  tags        Comma-separated tags for the content (e.g., "economy,technology,history").
+              Default: set by the environment variable TAGGING_CATEGORIES.
 """
 
 
