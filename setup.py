@@ -9,8 +9,8 @@ setup(
     entry_points={
         "console_scripts": [
             "get=src.cli:get",
-            "brief=src.cli:brief",
             "mpipe=src.cli:mpipe",
+            "serve=src.cli:serve",
         ],
     },
 )

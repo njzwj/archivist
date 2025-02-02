@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ post.meta.title }}</title>
+</head>
+<body>
+    <h1>{{ post.meta.title }}</h1>
+    <p>日期: {{ post.meta.created_at }}</p>
+    <div>
+        {{ post.content|safe }}
+    </div>
+</body>
+</html>
