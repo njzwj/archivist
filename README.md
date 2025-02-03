@@ -56,6 +56,16 @@ To generate a briefing:
 mpipe brief language=Japanese
 ```
 
+### Serving Documents Locally
+
+To start a local server for browsing tagged posts, run the following command:
+
+```bash
+serve runserver runserver
+```
+
+![Server](./images/serve.png)
+
 ## Future Enhancements
 
 - ~~Implement cookie support~~: *Attempted but unsuccessful due to YouTube access restrictions via DC.*
