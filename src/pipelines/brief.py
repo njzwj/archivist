@@ -24,7 +24,6 @@ write_brief_chain = (
     - Improve Structure & Flow: Ensure logical organization with smooth transitions.
     - Enhance Clarity & Depth: Keep the content informative, engaging, and nuanced.
     - Refine Style & Tone: Adopt a professional, polished, and journalistic tone.
-    - Length: Comparable to an average blog post.
 
     Writing Guidelines:
     - Introduction: Summarize key points concisely using bullet points.
@@ -44,7 +43,7 @@ write_brief_chain = (
     
     Body
 
-    - Place the final rewritten article **directly below** this prompt—without any additional explanation.
+    - Place the final rewritten article **directly below** this line without any additional explanation, omitting any quote marks.
     """
     )
     | model
