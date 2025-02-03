@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@tailwindcss/typography@0.4.1/dist/typography.min.css" rel="stylesheet">
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <title>Power LLM list</title>
 </head>
@@ -16,7 +18,7 @@
                         <div class="text-gray-600 text-sm">
                             {{ post.meta.created_at }}
                         </div>
-                        <div class="text-lg font-semibold">
+                        <div class="text-lg font-semibold mb-2">
                             <a href="post/{{ post.meta.slug }}/" class="text-black-500 hover:underline">
                                 {{ post.meta.title }}
                             </a>
