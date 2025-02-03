@@ -6,30 +6,46 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@tailwindcss/typography@0.4.1/dist/typography.min.css" rel="stylesheet">
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-    <title>Power LLM list</title>
+    <title>Power LLM list{{ page_title }}</title>
 </head>
 <body class="font-serif">
     <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold mb-6">Power LLM list</h1>
+        <div class="mb-4">
+            <h1 class="text-2xl font-bold">Power LLM list{{ page_title }}</h1>
+            <a href="{% url 'all_posts' %}" class="text-blue-500 hover:underline">All posts</a>
+            <div class="flex flex-wrap gap-2">
+                <span class="text-gray-600">Tags:</span>
+                {% for tag in tags %}
+                <a href="{% url 'posts_by_tag' tag %}" class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded hover:underline">
+                    {{ tag }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
         <ul>
             {% for post in posts %}
                 <li class="mb-4">
                     <div class="p-4 rounded shadow">
+
                         <div class="text-gray-600 text-sm">
                             {{ post.meta.created_at }}
                         </div>
+
                         <div class="text-lg font-semibold mb-2">
                             <a href="{% url 'post' post.meta.title %}" class="text-black-500 hover:underline">
                                 {{ post.meta.title }}
                             </a>
                         </div>
+
                         <div class="flex flex-wrap gap-2">
-                            {% for tag in post.meta.tags %}
-                                <a href="/tag/{{ tag }}/" class="bg-gray-200 text-gray-800 text-xs font-medium px-2 py-1 rounded">
-                                    {{ tag }}
-                                </a>
-                            {% endfor %}
+                          {% for tag in post.meta.tags %}
+                          <a href="{% url 'posts_by_tag' tag %}" class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded hover:underline">
+                            {{ tag }}
+                          </a>
+                          {% endfor %}
                         </div>
+
                     </div>
                 </li>
             {% endfor %}

@@ -26,7 +26,7 @@ def parse_post(obj: dict) -> dict:
     return post
 
 
-def get_all_posts(path: str = post_path) -> List[dict]:
+def get_all_posts(path: str = post_path) -> tuple:
     posts = []
     for file in os.listdir(path):
         if file.endswith(".json"):
@@ -37,7 +37,9 @@ def get_all_posts(path: str = post_path) -> List[dict]:
 
     posts.sort(key=lambda x: x["meta"]["created_at"], reverse=True)
 
-    return posts
+    tags = list(set(tag for post in posts for tag in post["meta"]["tags"]))
+
+    return posts, tags
 
 
 def get_post_by_slug(slug: str, path: str = post_path) -> dict:
