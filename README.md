@@ -56,8 +56,6 @@ To generate a briefing:
 mpipe brief language=Japanese
 ```
 
-### Serving Documents Locally
-
 To start a local server for browsing tagged posts, run the following command:
 
 ```bash
