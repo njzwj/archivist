@@ -70,7 +70,7 @@ serve runserver runserver
 
 - ~~Implement cookie support~~: *Attempted but unsuccessful due to YouTube access restrictions via DC.*
 - [x] Developed `mpipe`: A tool for tagging, rewriting, summarizing, and modifying stored files.
-- [] Add `Serve`: A server tool to display categorized pages for viewing collected content.
+- [x] Add `Serve`: A server tool to display categorized pages for viewing collected content.
 
 
 ## References
