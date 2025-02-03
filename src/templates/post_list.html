@@ -19,15 +19,15 @@
                             {{ post.meta.created_at }}
                         </div>
                         <div class="text-lg font-semibold mb-2">
-                            <a href="post/{{ post.meta.slug }}/" class="text-black-500 hover:underline">
+                            <a href="{% url 'post' post.meta.title %}" class="text-black-500 hover:underline">
                                 {{ post.meta.title }}
                             </a>
                         </div>
                         <div class="flex flex-wrap gap-2">
                             {% for tag in post.meta.tags %}
-                                <span class="bg-gray-200 text-gray-800 text-xs font-medium px-2 py-1 rounded">
+                                <a href="/tag/{{ tag }}/" class="bg-gray-200 text-gray-800 text-xs font-medium px-2 py-1 rounded">
                                     {{ tag }}
-                                </span>
+                                </a>
                             {% endfor %}
                         </div>
                     </div>
