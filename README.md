@@ -1,10 +1,8 @@
-# LLM Pipeline
+# Archivist
 
-## Overview
+**Archivist** is designed to efficiently manage and process consumed content, primarily from video platforms such as Bilibili and YouTube. Future updates will extend support to additional content types.
 
-The LLM Pipeline is designed to efficiently manage and process consumed content, primarily from video platforms such as Bilibili and YouTube. Future updates will extend support to additional content types.
-
-### Key Features
+## Key Features
 
 1. **Content Management**: Handles video content from public platforms, extracting and organizing information for further processing.
 2. **Data Processing**: Provides flexible processing capabilities, including:
@@ -55,6 +53,8 @@ To generate a briefing:
 ```bash
 mpipe brief language=Japanese
 ```
+
+## View Formatted Contents
 
 To start a local server for browsing tagged posts, run the following command:
 

@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="power-llm",
-    version="0.1",
+    name="archivist",
+    version="0.1.1",
     packages=find_packages(),
     author="njzwj",
-    description="A collection of utilities of LLM",
+    description="Organizing, summarizing, and categorizing web content and videos, making it simple to review and retrieve information",
     entry_points={
         "console_scripts": [
             "get=src.cli:get",
