@@ -16,8 +16,7 @@ def serve():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "src.server.settings")
     args = parse_args()
     argv = ["manage.py", "runserver"] + args.argv
-    print(argv)
-    
+
     from django.core.management import execute_from_command_line
 
     execute_from_command_line(argv)
