@@ -7,6 +7,14 @@ ARCHIVIST_ENV_PATH = os.path.expanduser(
     os.getenv("ARCHIVIST_ENV_PATH", "~/.archivist.env")
 )
 
+if not os.path.exists(ARCHIVIST_ENV_PATH):
+    if os.path.exists(os.path.expanduser("~/.archivist.env")):
+        ARCHIVIST_ENV_PATH = os.path.expanduser("~/.archivist.env")
+    elif os.path.exists(".env"):
+        ARCHIVIST_ENV_PATH = ".env"
+    else:
+        ARCHIVIST_ENV_PATH = ".env.sample"
+
 dotenv.load_dotenv(dotenv_path=ARCHIVIST_ENV_PATH)
 
 cookies = dict(
