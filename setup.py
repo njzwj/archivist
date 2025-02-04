@@ -10,7 +10,14 @@ setup(
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     url="N/A",
-    install_requires=[],
+    install_requires=[
+        "langchain",
+        "langchain-openai",
+        "langchain-community",
+        "python-dotenv",
+        "transformers",
+        "django",
+    ],
     extras_require={
         "dev": ["pytest"],
     },
