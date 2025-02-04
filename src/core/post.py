@@ -1,13 +1,12 @@
 import os
 import markdown
-from typing import List
 from datetime import datetime
 import json
 
 from ..utils.config import get_config
 
 config = get_config()
-post_path = config.power_llm_results_path
+post_path = config.archivist_results_path
 
 
 def parse_post(obj: dict) -> dict:

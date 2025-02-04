@@ -55,7 +55,7 @@ def mpipe_wrapper():
     args = parse_args()
     kwargs = parse_arguments(args.args)
 
-    path = config.power_llm_results_path
+    path = config.archivist_results_path
 
     json_files = [file for file in os.listdir(path) if file.endswith(".json")]
     for file in tqdm(json_files, desc="Processing files"):

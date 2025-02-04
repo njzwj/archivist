@@ -60,7 +60,7 @@ def parse_args():
         type=str,
         help="The directory to save the downloaded file",
         nargs="?",
-        default=config.power_llm_results_path,
+        default=config.archivist_results_path,
     )
     return parser.parse_args()
 

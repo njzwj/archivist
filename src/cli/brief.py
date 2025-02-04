@@ -16,7 +16,7 @@ from ..runnables.tools import load_from_file
 
 config = get_config()
 default_output_file = os.path.join(
-    config.power_llm_results_path, f"briefing_{datetime.now().strftime('%Y-%m-%d')}.md"
+    config.archivist_results_path, f"briefing_{datetime.now().strftime('%Y-%m-%d')}.md"
 )
 
 cache_key = "briefing"
@@ -31,7 +31,7 @@ def parse_args():
         "--input_dir",
         type=str,
         help="The directory containing the JSON files",
-        default=config.power_llm_results_path,
+        default=config.archivist_results_path,
     )
     parser.add_argument(
         "-t", "--time", type=str, help="The time range to summarize", default="3 day"

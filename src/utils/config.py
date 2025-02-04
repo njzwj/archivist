@@ -3,11 +3,11 @@ import dotenv
 import os
 import platform
 
-POWER_LLM_ENV_PATH = os.path.expanduser(
-    os.getenv("POWER_LLM_ENV_PATH", "~/.power-llm.env")
+ARCHIVIST_ENV_PATH = os.path.expanduser(
+    os.getenv("ARCHIVIST_ENV_PATH", "~/.archivist.env")
 )
 
-dotenv.load_dotenv(dotenv_path=POWER_LLM_ENV_PATH)
+dotenv.load_dotenv(dotenv_path=ARCHIVIST_ENV_PATH)
 
 cookies = dict(
     darwin=dict(
@@ -71,12 +71,12 @@ def load_cookies():
 
 class Config:
 
-    power_llm_env_path = POWER_LLM_ENV_PATH
+    archivist_env_path = ARCHIVIST_ENV_PATH
     azure_openai_api_key = os.getenv("AZURE_OPENAI_API_KEY")
     azure_openai_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
     azure_openai_api_version = os.getenv("AZURE_OPENAI_API_VERSION")
     azure_openai_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
-    power_llm_results_path = os.path.expanduser(os.getenv("POWER_LLM_RESULTS_PATH"))
+    archivist_results_path = os.path.expanduser(os.getenv("ARCHIVIST_RESULTS_PATH"))
     tagging_categories = os.getenv("TAGGING_CATEGORIES", "")
 
 
