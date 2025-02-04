@@ -7,7 +7,7 @@ def parse_args():
     parser.add_argument(
         "argv",
         nargs=argparse.REMAINDER,
-        help="Arguments to pass to the Django management command.",
+        help="Arguments to pass to the Django runserver command.",
     )
     return parser.parse_args()
 
@@ -15,7 +15,9 @@ def parse_args():
 def serve():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "src.server.settings")
     args = parse_args()
-    # print(f"Serving on port {args.port}")
+    argv = ["manage.py", "runserver"] + args.argv
+    print(argv)
+    
     from django.core.management import execute_from_command_line
 
-    execute_from_command_line(args.argv)
+    execute_from_command_line(argv)

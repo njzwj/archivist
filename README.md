@@ -59,8 +59,11 @@ mpipe brief language=Japanese
 To start a local server for browsing tagged posts, run the following command:
 
 ```bash
-serve runserver runserver
+serve [argv...]
+serve 8001
 ```
+
+This equals to `manage.py runserver` in django.
 
 ![Server](./images/serve.png)
 
