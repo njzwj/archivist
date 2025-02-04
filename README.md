@@ -3,7 +3,12 @@
 ![License](https://img.shields.io/badge/license-MIT-purple)
 ![Status](https://img.shields.io/badge/status-under_development-lightgray)
 
-**Archivist** is designed to efficiently manage and process consumed content, primarily from video platforms such as Bilibili and YouTube. Future updates will extend support to additional content types.
+TL;DR: **Archivist** is designed to
+- Keep track of what we've consumed (online videos).
+- Extract valuable insights.
+- Retrieve and read about it later.
+
+The long version: **Archivist** is designed to efficiently manage and process consumed content, primarily from video platforms such as Bilibili and YouTube. Future updates will extend support to additional content types.
 
 ## Key Features
 
