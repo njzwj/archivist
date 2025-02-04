@@ -17,7 +17,7 @@ write_brief_chain = (
     {transcript}
     ```
 
-    Task: Rewrite the provided transcript above into a professional article, similar in style to *The Economist*. In **{language}**.
+    Task: Rewrite the provided transcript above into an outline and professional article, similar in style to *The Economist*. In **{language}**.
 
     Key Requirements:
     - Maintain Core Ideas: Preserve the main arguments and essential details.
@@ -34,6 +34,7 @@ write_brief_chain = (
     Format Instructions:
     - Use Markdown for formatting.
     - Avoid excessive subheadings, but ensure readability.
+    - 2 parts, the first part is the keypoints in bullet points, the second part is the article.
  
     Here is an example:
     - Bulleting 1
