@@ -66,7 +66,7 @@ tagging_chain = (
 
 
 def tag_content(inputs: dict, **kwargs) -> dict:
-    if "tags" in dict.keys():
+    if "tags" in inputs.keys():
         return inputs
 
     if "tags" not in kwargs:
