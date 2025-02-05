@@ -66,6 +66,9 @@ tagging_chain = (
 
 
 def tag_content(inputs: dict, **kwargs) -> dict:
+    if "tags" in dict.keys():
+        return inputs
+
     if "tags" not in kwargs:
         kwargs["tags"] = config.tagging_categories
         warnings.warn(
