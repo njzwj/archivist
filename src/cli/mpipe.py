@@ -1,4 +1,5 @@
 from tqdm import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
 from typing import List
 import argparse
 import os
@@ -7,6 +8,7 @@ from ..core.item_model import ItemModel
 from ..pipelines import orchestrator
 from ..utils.config import get_config
 from ..utils.decorators import timer, count_tokens
+from ..utils import std_out_err_redirect_tqdm
 
 config = get_config()
 
@@ -58,8 +60,12 @@ def mpipe_wrapper():
     path = config.archivist_results_path
 
     json_files = [file for file in os.listdir(path) if file.endswith(".json")]
-    for file in tqdm(json_files, desc="Processing files"):
-        run_pipeline_on(os.path.join(path, file), args.pipeline, **kwargs)
+    with logging_redirect_tqdm():
+        with std_out_err_redirect_tqdm() as orig_stdout:
+            for file in tqdm(
+                json_files, desc="Processing files", dynamic_ncols=True, file=orig_stdout
+            ):
+                run_pipeline_on(os.path.join(path, file), args.pipeline, **kwargs)
 
 
 def mpipe():
