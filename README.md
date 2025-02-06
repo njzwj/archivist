@@ -75,11 +75,12 @@ This equals to `manage.py runserver` in django.
 
 ![Server](./images/serve.png)
 
-## Future Enhancements
+## TODOs
 
-- ~~Implement cookie support~~: *Attempted but unsuccessful due to YouTube access restrictions via DC.*
-- [x] Developed `mpipe`: A tool for tagging, rewriting, summarizing, and modifying stored files.
-- [x] Add `Serve`: A server tool to display categorized pages for viewing collected content.
+[] ~~Implement cookie support~~ (attempted but unsuccessful due to YouTube access restrictions via DC).
+[x] Develope `mpipe`: A tool for tagging, rewriting, summarizing, and modifying stored files.
+[x] Added `serve`: A server tool to display categorized pages for viewing collected content.
+[ ] Enhance `get` to fetch more text data from pages, including those without videos.
 
 
 ## References
