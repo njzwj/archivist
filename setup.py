@@ -17,6 +17,8 @@ setup(
         "python-dotenv",
         "transformers",
         "django",
+        "beautifulsoup4",
+        "fake-useragent",
     ],
     extras_require={
         "dev": ["pytest"],

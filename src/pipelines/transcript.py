@@ -1,8 +1,6 @@
 import os
 import re
 import subprocess
-import time
-import json
 
 from src.core.pipeline import Pipeline
 from src.core.models import get_hf_whisper_large_v3_turbo
