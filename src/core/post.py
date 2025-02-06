@@ -17,10 +17,10 @@ def parse_post(obj: dict) -> dict:
             slug=obj["title"],
             created_at=datetime.strptime(obj["created_at"], "%Y-%m-%d %H:%M:%S %z"),
             tags=obj.get("tags", []),
-            transcript=markdown.markdown(obj.get("transcript", "")),
-            briefing=markdown.markdown(obj.get("briefing", "")),
+            transcript=markdown.markdown(obj.get("transcript", ""), tab_length=2),
+            briefing=markdown.markdown(obj.get("briefing", ""), tab_length=2),
         ),
-        content=markdown.markdown(obj.get("briefing", "")),
+        content=markdown.markdown(obj.get("briefing", ""), tab_length=2),
     )
     return post
 
