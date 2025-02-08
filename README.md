@@ -80,7 +80,7 @@ This equals to `manage.py runserver` in django.
 [] ~~Implement cookie support~~ (attempted but unsuccessful due to YouTube access restrictions via DC).
 [x] Develope `mpipe`: A tool for tagging, rewriting, summarizing, and modifying stored files.
 [x] Added `serve`: A server tool to display categorized pages for viewing collected content.
-[ ] Enhance `get` to fetch more text data from pages, including those without videos.
+[x] Enhance `get` to fetch more text data from pages, including those without videos.
 
 
 ## References

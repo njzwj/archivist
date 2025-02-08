@@ -41,7 +41,7 @@ write_brief_chain = (
     [Keypoints in bullet points, possibly nested, but not required]
     ...
     ---
-    [Body]
+    [Body that is summarized and rewritten with details]
     </format_instruction>
 
     Here is a format example:
