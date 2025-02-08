@@ -22,8 +22,10 @@
         <div class="mb-8">
             <a href="javascript:history.back()" class="text-blue-500 hover:underline">&lt; Back</a>
         </div>
+        <p class="text-gray-600">Fetched at {{ post.meta.created_at }}</p>
         <h1 class="text-2xl font-bold mb-4">{{ post.meta.title }}</h1>
-        <p class="text-gray-600">{{ post.meta.created_at }}</p>
+        <p class="text-gray-600">{{ post.meta.published_at }}</p>
+        <p class="text-gray-600">By {{ post.meta.author }}</p>
         <a href="{{ post.meta.source }}" target="_blank" class="text-gray-500 hover:underline">{{ post.meta.source }}</a>
 
         <div class="flex flex-wrap gap-2 mb-4">

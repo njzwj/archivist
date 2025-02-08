@@ -19,6 +19,7 @@ setup(
         "django",
         "beautifulsoup4",
         "fake-useragent",
+        "html2text",
     ],
     extras_require={
         "dev": ["pytest"],

@@ -36,13 +36,26 @@ write_brief_chain = (
     - Avoid excessive subheadings, but ensure readability.
     - 2 parts, the first part is the keypoints in bullet points, the second part is the article.
  
-    Here is an example:
-    - Bulleting 1
-      - 1.1
-      ...
+    Here is a format instruction:
+    <format_instruction>
+    [Keypoints in bullet points, possibly nested, but not required]
     ...
+    ---
+    [Body]
+    </format_instruction>
+
+    Here is a format example:
+    <format_example>
+    - In new research, scientists have discovered a new species of fish.
+      - The fish was found in the Amazon River.
+      - It has a unique color pattern.
+    - The discovery is significant because it may help us understand the ecosystem better.
+      - ...
     
-    Body
+    ---
+
+    Recent studies have shown that the Amazon River is home to a new species of fish. The fish, which has a unique color pattern, was discovered by scientists during a research expedition. This discovery is significant because it may help us understand the ecosystem better. The new species is expected to be named after the lead researcher, Dr. Jane Doe...
+    </format_example>
 
     - Place the final rewritten article **directly below** this line without any additional explanation, omitting any quote marks.
     """

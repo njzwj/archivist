@@ -4,7 +4,7 @@ import subprocess
 
 from src.core.pipeline import Pipeline
 from src.core.models import get_hf_whisper_large_v3_turbo
-from utils.config import get_config
+from src.utils.config import get_config
 
 
 config = get_config()
@@ -95,6 +95,9 @@ def transcript(audio_path):
 
 
 def get_video_transcript(inputs: dict, **kwargs) -> dict:
+    if "transcript" in inputs.keys():
+        return inputs
+
     url = inputs.get("url")
     output_dir = os.path.abspath(
         os.path.expanduser(inputs.get("output_dir", config.archivist_results_path))

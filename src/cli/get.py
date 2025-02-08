@@ -1,16 +1,10 @@
-from langchain_core.runnables import RunnablePassthrough
-from operator import itemgetter
-from src.runnables.tools import (
-    get_video,
-    extract_audio,
-    transcript,
-    extract_title_from_path,
-    created_at,
-    clean_temp_files,
-    write_to_file,
-)
 import argparse
 import re
+import time
+import os
+
+from ..core.item_model import ItemModel
+from ..pipelines import orchestrator
 
 from ..utils.config import get_config
 from ..utils.decorators import timer, count_tokens
@@ -22,32 +16,6 @@ video_sites = [
     "bilibili",
     "vimeo",
 ]
-
-chain = (
-    RunnablePassthrough.assign(
-        video_path=lambda inputs: get_video(inputs["url"], inputs["output_dir"]),
-    )
-    | RunnablePassthrough.assign(
-        audio_path=lambda inputs: extract_audio(inputs["video_path"]),
-    )
-    | RunnablePassthrough.assign(
-        transcript=lambda inputs: transcript(inputs["audio_path"]),
-    )
-    | RunnablePassthrough.assign(
-        title=clean_temp_files,
-    )
-    | RunnablePassthrough.assign(
-        title=lambda inputs: extract_title_from_path(inputs["video_path"]),
-    )
-    | {
-        "output_dir": itemgetter("output_dir"),
-        "url": itemgetter("url"),
-        "created_at": created_at,
-        "title": itemgetter("title"),
-        "transcript": itemgetter("transcript"),
-    }
-    | write_to_file
-)
 
 
 def parse_args():
@@ -81,15 +49,18 @@ def clean_url(url):
 def get_wrapper(url, output_dir):
     if re.search(r"bilibili", url):
         url = clean_url(url)
-    for site in video_sites:
-        if site in url:
-            return chain.invoke(
-                {
-                    "url": url,
-                    "output_dir": output_dir,
-                }
-            )
-    raise ValueError(f"Unsupported site: {url}")
+    
+    inputs = {
+        "url": url,
+        "created_at": time.strftime("%Y-%m-%d %H:%M:%S %z"),
+    }
+
+    inputs = orchestrator.process("scrape", inputs)
+    inputs = orchestrator.process("transcript", inputs)
+    
+    output_dir = output_dir or config.archivist_results_path
+    item = ItemModel(inputs, os.path.join(output_dir, inputs["title"] + ".json"))
+    item.save()
 
 
 def get():
