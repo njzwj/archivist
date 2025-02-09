@@ -40,8 +40,9 @@ def get_all_posts(path: str = post_path) -> tuple:
     posts.sort(key=lambda x: x["meta"]["created_at"], reverse=True)
 
     tags = list(set(tag for post in posts for tag in post["meta"]["tags"]))
+    authors = list(set(post["meta"]["author"] for post in posts if post["meta"]["author"]))
 
-    return posts, tags
+    return posts, tags, authors
 
 
 def get_post_by_slug(slug: str, path: str = post_path) -> dict:

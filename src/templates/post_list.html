@@ -15,11 +15,19 @@
         <div class="mb-6">
             <h1 class="text-2xl font-bold">Archivist{{ page_title }}</h1>
             <a href="{% url 'all_posts' %}" class="text-blue-500 hover:underline">All posts</a>
-            <div class="flex flex-wrap gap-2">
+            <div class="flex flex-wrap gap-2 mb-2">
                 <span class="text-gray-600">Tags:</span>
                 {% for tag in tags %}
                 <a href="{% url 'posts_by_tag' tag %}" class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded hover:underline">
                     {{ tag }}
+                </a>
+                {% endfor %}
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <span class="text-gray-600">Authors:</span>
+                {% for author in authors %}
+                <a href="{% url 'posts_by_author' author %}" class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded hover:underline">
+                    {{ author }}
                 </a>
                 {% endfor %}
             </div>
