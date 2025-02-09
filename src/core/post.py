@@ -14,7 +14,7 @@ def parse_post(obj: dict) -> dict:
         meta=dict(
             source=obj["url"],
             title=obj["title"],
-            slug=obj["title"],
+            slug=obj["slug"],
             created_at=datetime.strptime(obj["created_at"], "%Y-%m-%d %H:%M:%S %z"),
             published_at=datetime.strptime(obj["published_at"], "%Y-%m-%d %H:%M:%S"),
             author=obj.get("author", "Unknown"),
@@ -33,6 +33,7 @@ def get_all_posts(path: str = post_path) -> tuple:
         if file.endswith(".json"):
             with open(os.path.join(path, file), "r") as f:
                 obj = json.load(f)
+                obj["slug"] = file
                 post = parse_post(obj)
                 posts.append(post)
 
@@ -44,11 +45,8 @@ def get_all_posts(path: str = post_path) -> tuple:
 
 
 def get_post_by_slug(slug: str, path: str = post_path) -> dict:
-    for file in os.listdir(path):
-        if not file.endswith(".json"):
-            continue
-        if file.startswith(slug):
-            with open(os.path.join(path, file), "r") as f:
-                obj = json.load(f)
-                post = parse_post(obj)
-                return post
+    with open(os.path.join(path, slug), "r") as f:
+        obj = json.load(f)
+        obj["slug"] = slug
+        post = parse_post(obj)
+        return post

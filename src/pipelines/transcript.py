@@ -15,8 +15,9 @@ def extract_downloaded_file_path(output, output_dir):
     ext_r = r"\.(mp4|webm)"
 
     title = re.search(r, output)
+
     if title:
-        title = title.group(1)
+        title = title.group(1).replace("|", "-")
     else:
         title = None
         raise ValueError(f"Cannot extract video title from {output}")
