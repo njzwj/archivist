@@ -57,6 +57,8 @@ def get_wrapper(url, output_dir):
 
     inputs = orchestrator.process("scrape", inputs)
     inputs = orchestrator.process("transcript", inputs)
+    inputs = orchestrator.process("tag", inputs)
+    inputs = orchestrator.process("briefing", inputs)
     
     output_dir = output_dir or config.archivist_results_path
     item = ItemModel(inputs, os.path.join(output_dir, inputs["title"] + ".json"))
