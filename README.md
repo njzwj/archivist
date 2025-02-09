@@ -81,6 +81,7 @@ This equals to `manage.py runserver` in django.
 [x] Develope `mpipe`: A tool for tagging, rewriting, summarizing, and modifying stored files.
 [x] Added `serve`: A server tool to display categorized pages for viewing collected content.
 [x] Enhance `get` to fetch more text data from pages, including those without videos.
+[] Streamline default pipelines for get so that each time I won't need to run `mpipe` for multiple times.
 
 
 ## References
