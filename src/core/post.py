@@ -9,6 +9,13 @@ config = get_config()
 post_path = config.archivist_results_path
 
 
+def count(lst) -> dict:
+    cnt = {item: lst.count(item) for item in lst}
+    cnt = [{"key": k, "count": v} for k, v in cnt.items() if k != ""]
+    cnt.sort(key=lambda x: x["count"], reverse=True)
+    return cnt
+
+
 def parse_post(obj: dict) -> dict:
     post = dict(
         meta=dict(
@@ -39,8 +46,10 @@ def get_all_posts(path: str = post_path) -> tuple:
 
     posts.sort(key=lambda x: x["meta"]["created_at"], reverse=True)
 
-    tags = list(set(tag for post in posts for tag in post["meta"]["tags"]))
-    authors = list(set(post["meta"]["author"] for post in posts if post["meta"]["author"]))
+    tags = [tag for post in posts for tag in post["meta"]["tags"]]
+    tags = count(tags)
+    authors = [post["meta"]["author"] for post in posts]
+    authors = count(authors)
 
     return posts, tags, authors
 

@@ -18,16 +18,16 @@
             <div class="flex flex-wrap gap-2 mb-2">
                 <span class="text-gray-600">Tags:</span>
                 {% for tag in tags %}
-                <a href="{% url 'posts_by_tag' tag %}" class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded hover:underline">
-                    {{ tag }}
+                <a href="{% url 'posts_by_tag' tag.key %}" class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded hover:underline">
+                    {{ tag.key }} ({{ tag.count }})
                 </a>
                 {% endfor %}
             </div>
             <div class="flex flex-wrap gap-2">
                 <span class="text-gray-600">Authors:</span>
                 {% for author in authors %}
-                <a href="{% url 'posts_by_author' author %}" class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded hover:underline">
-                    {{ author }}
+                <a href="{% url 'posts_by_author' author.key %}" class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded hover:underline">
+                    {{ author.key }} ({{ author.count }})
                 </a>
                 {% endfor %}
             </div>
