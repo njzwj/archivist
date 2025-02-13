@@ -77,10 +77,16 @@ This equals to `manage.py runserver` in django.
 
 ## TODOs
 
-[] ~~Implement cookie support~~ (attempted but unsuccessful due to YouTube access restrictions via DC).
+[] Support Cookie for websites protected by login.
+
+[] Add kwargs pre-check and memo for easier use.
+
 [x] Develope `mpipe`: A tool for tagging, rewriting, summarizing, and modifying stored files.
+
 [x] Added `serve`: A server tool to display categorized pages for viewing collected content.
+
 [x] Enhance `get` to fetch more text data from pages, including those without videos.
+
 [x] Streamline default pipelines for get so that each time I won't need to run `mpipe` for multiple times.
 
 
