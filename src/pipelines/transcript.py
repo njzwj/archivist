@@ -103,7 +103,7 @@ def get_video_transcript(inputs: dict, **kwargs) -> dict:
     output_dir = os.path.abspath(
         os.path.expanduser(inputs.get("output_dir", config.archivist_results_path))
     )
-    
+
     video_path = download_video(url, output_dir)
     audio_path = extract_audio(video_path)
     transcript_text = transcript(audio_path)

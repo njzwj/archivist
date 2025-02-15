@@ -6,11 +6,11 @@ import os
 
 from ..core.item_model import ItemModel
 from ..pipelines import orchestrator
-from ..utils.config import get_config
+from ..utils import get_config, get_cache, std_out_err_redirect_tqdm
 from ..utils.decorators import timer, count_tokens
-from ..utils import std_out_err_redirect_tqdm
 
 config = get_config()
+cache = get_cache()
 
 
 help_string = """Run specific pipelines and output the results to the original file."""
@@ -39,7 +39,13 @@ def parse_args():
 
 
 def parse_arguments(args: List[str]) -> dict:
-    return dict(arg.split("=", 1) for arg in args)
+    cached_args = cache.read("kwargs")
+    args = dict(arg.split("=", 1) for arg in args)
+    if args.keys().length == 0:
+        args = cached_args or {}
+        print(f"Using cached arguments:\n{args}")
+    cache.write("kwargs", args)
+    return args
 
 
 def run_pipeline_on(path: str, pipeline: str, **kwargs):
@@ -63,7 +69,10 @@ def mpipe_wrapper():
     with logging_redirect_tqdm():
         with std_out_err_redirect_tqdm() as orig_stdout:
             for file in tqdm(
-                json_files, desc="Processing files", dynamic_ncols=True, file=orig_stdout
+                json_files,
+                desc="Processing files",
+                dynamic_ncols=True,
+                file=orig_stdout,
             ):
                 run_pipeline_on(os.path.join(path, file), args.pipeline, **kwargs)
 
