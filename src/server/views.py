@@ -7,7 +7,12 @@ def post_list(request):
     return render(
         request,
         "post_list.html",
-        {"posts": posts, "tags": tags, "authors": authors, "page_title": " | All Posts"},
+        {
+            "posts": posts,
+            "tags": tags,
+            "authors": authors,
+            "page_title": " | All Posts",
+        },
     )
 
 
@@ -17,8 +22,14 @@ def post_list_tag(request, tag):
     return render(
         request,
         "post_list.html",
-        {"posts": posts, "tags": tags, "authors": authors, "page_title": f" | tag={tag}"},
+        {
+            "posts": posts,
+            "tags": tags,
+            "authors": authors,
+            "page_title": f" | tag={tag}",
+        },
     )
+
 
 def post_list_author(request, author):
     posts, tags, authors = get_all_posts()
@@ -26,7 +37,12 @@ def post_list_author(request, author):
     return render(
         request,
         "post_list.html",
-        {"posts": posts, "tags": tags, "authors": authors, "page_title": f" | author={author}"},
+        {
+            "posts": posts,
+            "tags": tags,
+            "authors": authors,
+            "page_title": f" | author={author}",
+        },
     )
 
 

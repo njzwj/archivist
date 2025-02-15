@@ -7,10 +7,11 @@ from typing import List
 from ..core.item_model import ItemModel
 from ..pipelines import orchestrator
 
-from ..utils.config import get_config
+from ..utils import get_config, get_cache
 from ..utils.decorators import timer, count_tokens
 
 config = get_config()
+cache = get_cache()
 
 video_sites = [
     "youtube",
@@ -20,7 +21,13 @@ video_sites = [
 
 
 def parse_arguments(args: List[str]) -> dict:
-    return dict(arg.split("=", 1) for arg in args)
+    cached_args = cache.read("kwargs")
+    args = dict(arg.split("=", 1) for arg in args)
+    if len(args) == 0:
+        args = cached_args or {}
+        print(f"Using cached arguments:\n{args}")
+    cache.write("kwargs", args)
+    return args
 
 
 def parse_args():
@@ -59,7 +66,7 @@ def clean_url(url):
 def get_wrapper(url, output_dir, kwargs):
     if re.search(r"bilibili", url):
         url = clean_url(url)
-    
+
     inputs = {
         "url": url,
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S %z"),
@@ -69,7 +76,7 @@ def get_wrapper(url, output_dir, kwargs):
     inputs = orchestrator.process("transcript", inputs, **kwargs)
     inputs = orchestrator.process("tag", inputs, **kwargs)
     inputs = orchestrator.process("brief", inputs, **kwargs)
-    
+
     output_dir = output_dir or config.archivist_results_path
     item = ItemModel(inputs, os.path.join(output_dir, inputs["title"] + ".json"))
     item.save()

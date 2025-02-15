@@ -36,11 +36,20 @@ The long version: **Archivist** is designed to efficiently manage and process co
 To retrieve a transcript from a video, run the following command:
 
 ```bash
-get 'https://www.youtube.com/...' [output-dir]
+get 'https://www.youtube.com/...' -o output/path language=Japanese tags=learning,health,...
 ```
 
 - The transcript is saved as a JSON file, named after the video title.
 - If `output-dir` is omitted, the file is saved in the default directory.
+- Once typed kwargs, it caches and you don't need to type again.
+
+Next time run
+
+```bash
+get 'https://www.youtube.com/...'
+```
+
+It uses the last kwargs you use.
 
 ## Running Pipelines on Documents
 
@@ -79,7 +88,7 @@ This equals to `manage.py runserver` in django.
 
 [] Support Cookie for websites protected by login.
 
-[] Add kwargs pre-check and memo for easier use.
+[x] Add cache kwargs so no need to type every time.
 
 [x] Develope `mpipe`: A tool for tagging, rewriting, summarizing, and modifying stored files.
 
