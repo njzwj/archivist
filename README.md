@@ -26,7 +26,7 @@ The long version: **Archivist** is designed to efficiently manage and process co
 - **Environment Setup**: Create a new Conda environment and install the required dependencies.
 
 ### Environment Configuration
-- Place the `.env` file in your user directory at `~/.archivist.env`.
+- Run `init` gives you an env file in user folder.
 - Define necessary environment variables within the `.env` file.
 - By default, the system reads from `~/.archivist.env`, but you can specify a different path using the `ARCHIVIST_ENV_PATH` environment variable.
 - The output directory is also specified within this `.env` file.
