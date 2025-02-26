@@ -84,7 +84,7 @@ class Config:
     azure_openai_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
     azure_openai_api_version = os.getenv("AZURE_OPENAI_API_VERSION")
     azure_openai_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
-    archivist_results_path = os.path.expanduser(os.getenv("ARCHIVIST_RESULTS_PATH"))
+    archivist_results_path = "~" if os.getenv("ARCHIVIST_RESULTS_PATH") is None else os.path.expanduser(os.getenv("ARCHIVIST_RESULTS_PATH"))
     tagging_categories = os.getenv("TAGGING_CATEGORIES", "")
 
 

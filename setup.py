@@ -29,6 +29,7 @@ setup(
             "get=src.cli:get",
             "mpipe=src.cli:mpipe",
             "serve=src.cli:serve",
+            "init=src.cli:run_init",
         ],
     },
 )
