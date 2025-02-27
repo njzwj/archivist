@@ -2,6 +2,7 @@ from src.core.pipeline import Pipeline
 from src.core.models import get_chat_model
 from langchain_core.prompts import PromptTemplate
 
+
 def c(inputs):
     return inputs.content
 

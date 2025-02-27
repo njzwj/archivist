@@ -16,8 +16,10 @@ text_maker.ignore_emphasis = True
 text_maker.ignore_tables = True
 text_maker.ignore_anchors = True
 
+
 def c(inputs):
     return inputs.content
+
 
 def get_extract_keys_chain():
     model = get_chat_model()

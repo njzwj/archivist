@@ -32,6 +32,7 @@ def get_summarize_chain():
     )
     return summarize_chain
 
+
 def get_tagging_chain():
     model = get_chat_model()
     tagging_chain = (
@@ -67,6 +68,7 @@ def get_tagging_chain():
         | c
     )
     return tagging_chain
+
 
 def tag_content(inputs: dict, **kwargs) -> dict:
     if "tags" in inputs.keys():
