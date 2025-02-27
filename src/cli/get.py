@@ -7,27 +7,16 @@ from typing import List
 from ..core.item_model import ItemModel
 from ..pipelines import orchestrator
 
-from ..utils import get_config, get_cache
+from ..utils import get_config, parse_arguments
 from ..utils.decorators import timer, count_tokens
 
 config = get_config()
-cache = get_cache()
 
 video_sites = [
     "youtube",
     "bilibili",
     "vimeo",
 ]
-
-
-def parse_arguments(args: List[str]) -> dict:
-    cached_args = cache.read("kwargs")
-    args = dict(arg.split("=", 1) for arg in args)
-    if len(args) == 0:
-        args = cached_args or {}
-        print(f"Using cached arguments:\n{args}")
-    cache.write("kwargs", args)
-    return args
 
 
 def parse_args():

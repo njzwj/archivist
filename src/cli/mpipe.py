@@ -1,16 +1,14 @@
 from tqdm import tqdm
 from tqdm.contrib.logging import logging_redirect_tqdm
-from typing import List
 import argparse
 import os
 
 from ..core.item_model import ItemModel
 from ..pipelines import orchestrator
-from ..utils import get_config, get_cache, std_out_err_redirect_tqdm
+from ..utils import get_config, std_out_err_redirect_tqdm, parse_arguments
 from ..utils.decorators import timer, count_tokens
 
 config = get_config()
-cache = get_cache()
 
 
 help_string = """Run specific pipelines and output the results to the original file."""
@@ -35,16 +33,6 @@ def parse_args():
         default=[],
     )
     args = parser.parse_args()
-    return args
-
-
-def parse_arguments(args: List[str]) -> dict:
-    cached_args = cache.read("kwargs")
-    args = dict(arg.split("=", 1) for arg in args)
-    if args.keys().length == 0:
-        args = cached_args or {}
-        print(f"Using cached arguments:\n{args}")
-    cache.write("kwargs", args)
     return args
 
 
