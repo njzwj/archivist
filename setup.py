@@ -20,6 +20,9 @@ setup(
         "beautifulsoup4",
         "fake-useragent",
         "html2text",
+        "markdown",
+        "torch",
+        "you-get",
     ],
     extras_require={
         "dev": ["pytest"],
