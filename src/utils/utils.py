@@ -1,7 +1,8 @@
 from tqdm.contrib import DummyTqdmFile
+from typing import List
 import contextlib
 import sys
-
+from .cache import get_cache
 
 @contextlib.contextmanager
 def std_out_err_redirect_tqdm():
@@ -15,3 +16,13 @@ def std_out_err_redirect_tqdm():
     # Always restore sys.stdout/err if necessary
     finally:
         sys.stdout, sys.stderr = orig_out_err
+
+def parse_arguments(args: List[str]) -> dict:
+    cache = get_cache()
+    cached_args = cache.read("kwargs")
+    args = dict(arg.split("=", 1) for arg in args)
+    if len(args) == 0:
+        args = cached_args or {}
+        print(f"Using cached arguments:\n{args}")
+    cache.write("kwargs", args)
+    return args

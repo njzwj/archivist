@@ -1,5 +1,5 @@
 import pytest
-from src.cli.mpipe import parse_arguments
+from src.utils import parse_arguments
 
 
 def test_parse_arguments():

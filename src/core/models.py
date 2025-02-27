@@ -8,10 +8,10 @@ config = get_config()
 
 def get_azure_chat_openai(**kwargs):
     model = AzureChatOpenAI(
-        azure_endpoint=config.azure_openai_endpoint or "https://contoso.openai.azure.com/",
-        azure_deployment=config.azure_openai_deployment or "gpt-35-turbo",
-        openai_api_version=config.azure_openai_api_version or "2023-05-15",
-        openai_api_key=config.azure_openai_api_key or "x",
+        azure_endpoint=config.azure_openai_endpoint,
+        azure_deployment=config.azure_openai_deployment,
+        openai_api_version=config.azure_openai_api_version,
+        openai_api_key=config.azure_openai_api_key,
         temperature=0,
         **kwargs,
     )
