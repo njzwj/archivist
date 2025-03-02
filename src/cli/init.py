@@ -1,21 +1,12 @@
 import os
-from dependency_injector import containers, providers
 
-from src.config import Config
-from src.logger import get_logger
-
-class Container(containers.DeclarativeContainer):
-
-    config = providers.Singleton(Config)
-
-    logger = providers.Callable(get_logger)
+from src.container import Container
 
 def init():
-    archivist_env_path = os.path.expanduser(
-        os.getenv('ARCHIVIST_ENV_PATH', Config.default_config_path)
-    )
-
     container = Container()
+
+    archivist_env_path = container.config.default_config_path
+
     config = container.config()
     logger = container.logger()
     if config.check_config_exists():
