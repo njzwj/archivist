@@ -1,6 +1,7 @@
 import os
 import configparser
 
+
 class Config:
 
     default_config_path = os.path.expanduser("~/.archivist.ini")
@@ -26,22 +27,22 @@ class Config:
 
     def __init__(self, config_path=default_config_path):
         self.config_path = config_path
-    
+
     def check_config_exists(self):
         return os.path.exists(self.config_path)
-    
+
     def load_config(self):
         parser = configparser.ConfigParser()
         self.config = parser.read(self.config_path)
-    
+
     def write_config(self, config=None):
         if config is None:
             config = self.default_config
         parser = configparser.ConfigParser()
         parser.read_dict(config)
-        with open(self.config_path, 'w') as configfile:
+        with open(self.config_path, "w") as configfile:
             parser.write(configfile)
-    
+
     def get_config(self):
         if self.config is None:
             self.load_config()

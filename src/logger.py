@@ -1,7 +1,8 @@
 import logging
 
+
 def get_logger(name="default", level=logging.DEBUG):
-    format_string = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format_string = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
     logger = logging.getLogger(name)
     logger.setLevel(level)

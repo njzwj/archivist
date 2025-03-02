@@ -5,15 +5,18 @@ from src.config import Config
 from src.container import Container
 from src.services import GptProvider
 
+
 @pytest.fixture
 def mock_config():
     config = Config()
     config.config = config.default_config
     return config
 
+
 @pytest.fixture
 def container():
     return Container()
+
 
 def test_gpt_provider_azure_openai(mock_config, container):
     container.config.override(mock_config)
