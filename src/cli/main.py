@@ -1,6 +1,7 @@
 import click
 
 from .init import init as init_command
+from .debug import debug as debug_command
 
 
 @click.group()
@@ -13,6 +14,12 @@ def cli():
 def init():
     """Initialize the archivist environment"""
     init_command()
+
+@cli.command()
+@click.argument("url", required=True, type=str)
+def debug(url):
+    """Debug a video download from url"""
+    debug_command(url)
 
 
 @cli.command()
