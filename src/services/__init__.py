@@ -1,5 +1,5 @@
-from .gpt import GptProvider
+from .gpt import GptService
 
 __all__ = [
-    "GptProvider",
+    "GptService",
 ]

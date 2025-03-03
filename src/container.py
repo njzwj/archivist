@@ -2,7 +2,7 @@ from dependency_injector import containers, providers
 
 from src.config import Config
 from src.logger import get_logger
-from src.services import GptProvider
+from src.services import GptService
 
 
 class Container(containers.DeclarativeContainer):
@@ -11,4 +11,4 @@ class Container(containers.DeclarativeContainer):
 
     logger = providers.Callable(get_logger)
 
-    gpt_provider = providers.Singleton(GptProvider, config=config)
+    gpt_service = providers.Singleton(GptService, config=config)

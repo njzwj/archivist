@@ -3,7 +3,7 @@ from langchain_openai import AzureChatOpenAI, AzureOpenAIEmbeddings
 from src.config import Config
 
 
-class GptProvider:
+class GptService:
 
     def __init__(self, config: Config):
         self.config = config
