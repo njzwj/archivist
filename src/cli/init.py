@@ -1,5 +1,3 @@
-import os
-
 from src.container import Container
 
 
