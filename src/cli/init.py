@@ -4,9 +4,10 @@ from src.container import Container
 def init():
     container = Container()
 
-    archivist_env_path = container.config.default_config_path
-
     config = container.config()
+
+    archivist_env_path = config.default_config_path
+
     logger = container.logger()
     if config.check_config_exists():
         logger.info(f"Config file already exists at {archivist_env_path}")

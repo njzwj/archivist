@@ -31,7 +31,7 @@ class VideoGetterService:
 
         # scan for video file
         for file in os.listdir(output_dir):
-            if file.startswith(title):
+            if file.startswith(title) and file.endswith((".mp4", ".mkv", ".webm")):
                 return os.path.join(output_dir, file)
         return None
     
@@ -46,8 +46,13 @@ class VideoGetterService:
 
         filename = os.path.splitext(os.path.basename(video_path))[0]
         output_filename = os.path.join(output_dir, filename + ".aac")
-        command = f"ffmpeg -i '{video_path}' -vn -acodec copy '{output_filename}'"
+
+        self.logger.debug(f"Extracting audio from {video_path} to {output_filename}")
+
+        command = f"ffmpeg -i '{video_path}' -vn -acodec copy '{output_filename}' -y"
+        self.logger.debug(f"Running command: {command}")
         result = subprocess.run(command, shell=True, capture_output=True)
+        print(result.stdout)
 
         if result.returncode != 0:
             raise RuntimeError(f"Failed to extract audio from video {video_path}.")

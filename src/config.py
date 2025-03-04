@@ -33,7 +33,8 @@ class Config:
 
     def load_config(self):
         parser = configparser.ConfigParser()
-        self.config = parser.read(self.config_path)
+        parser.read(self.config_path)
+        self.config = {section: dict(parser[section]) for section in parser.sections()}
 
     def write_config(self, config=None):
         if config is None:
@@ -44,7 +45,7 @@ class Config:
             parser.write(configfile)
 
     def get_config(self):
-        if self.config is None:
+        if not hasattr(self, "config"):
             self.load_config()
         return self.config
 
