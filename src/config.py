@@ -22,6 +22,7 @@ class Config:
         },
         "Tools": {
             "tags": "economy,health,education,environment,technology,politics,society,culture,language,science,religion,history,geography,arts,sports,philosophy",
+            "language": "zh-cn",
         },
     }
 

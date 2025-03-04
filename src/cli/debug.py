@@ -11,6 +11,7 @@ def debug(url):
     video_getter = container.video_getter_service()
     scraper = container.scrape_service()
     huggingface = container.huggingface_service()
+    extractor = container.extractor_service()
 
     # test download video
     file_path = video_getter.download_video(url, output_path)
@@ -39,11 +40,23 @@ def debug(url):
         logger.error("Failed to transcribe audio")
     
     # test scrape
-    data = scraper.scrape(url)
+    content = scraper.scrape(url)
 
-    if data:
-        logger.info(f"Scraped data: {data}")
+    if content:
+        logger.info(f"Scraped page content: {content[:100]}")
     else:
         logger.error("Failed to scrape")
+
+    # test extract
+    tags = extractor.extract_tags(
+        f"Transcript:\n\n{transcript}\n\nPage content:\n\n{content}"
+    )
+    logger.info(f"Extracted tags: {tags}")
+
+    # test rewrite
+    rewritten_content = extractor.rewrite_content(
+        f"Transcript:\n\n{transcript}\n\nPage content:\n\n{content}"
+    )
+    logger.info(f"Rewritten content: {rewritten_content}")
     
     return file_path

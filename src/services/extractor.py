@@ -56,7 +56,7 @@ class ExtractorService:
         
         Input is about a new product launch in E3. Outline should be:
         1. Introduction
-          1. Keypoints
+          1. Keypoints are
           2. What's new
         2. Product Description
           1. Sony's new product
@@ -64,7 +64,10 @@ class ExtractorService:
         3. Features
         4. Conclusion
 
-        Write directly below this line without any additional explanation. Using markdown format. In the language of **{language}**.
+        Guidelines:
+        - Write conclusions or assertions. Describe the conclusion or the point the original text is trying to make, not description of the topic. e.g., "The product is expected to be a game-changer in the industry." not "The product expectations.", should be "The ecnonomy has been growing at a steady pace." not "The economy growing rate."
+        - Use bullet points for lists and sublists.
+        Write directly below this line without any additional explanation. Using markdown format. In the language of **{language}**. Skip the triple backticks.
         """
     )
 
@@ -118,21 +121,24 @@ class ExtractorService:
         tagging_chain = (
             self.tag_prompt | self.gpt.chat_model_smart.bind(max_tokens=256, temperature=0)
         )
-        summary = summarize_chain.run(inputs=content).content
+        summary = summarize_chain.invoke(dict(inputs=content)).content
         self.logger.debug(f"Summary: {summary}")
-        tags_raw = tagging_chain.run(inputs=content, tags=tags).content
+        tags_raw = tagging_chain.invoke(dict(inputs=content, tags=tags)).content
 
         return self.convert_tag_output(tags_raw, tags)
 
-    def rewrite_content(self, content: str, language: str):
+    def rewrite_content(self, content: str, language: str = None):
+        if language is None:
+            language = self.config["Tools"]["language"]
+
         bulletin_chain = (
-            self.write_outline_prompt | self.gpt.chat_model_efficient.bind(max_tokens=256, temperature=0)
+            self.write_outline_prompt | self.gpt.chat_model_efficient.bind(max_tokens=512, temperature=0)
         )
-        bulletin = bulletin_chain.run(inputs=content, language=language).content
+        bulletin = bulletin_chain.invoke(dict(inputs=content, language=language)).content
 
         rewrite_chain = (
             self.write_article_prompt | self.gpt.chat_model_smart.bind(max_tokens=4096, temperature=0)
         )
-        rewritten_content = rewrite_chain.run(inputs=content, language=language).content
+        rewritten_content = rewrite_chain.invoke(dict(inputs=content, language=language)).content
 
         return f"{bulletin}\n\n---\n\n{rewritten_content}"
