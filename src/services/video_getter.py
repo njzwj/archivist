@@ -3,11 +3,12 @@ import subprocess
 import json
 import os
 
+
 class VideoGetterService:
 
     def __init__(self, logger: logging.Logger):
         self.logger = logger
-    
+
     def extract_title(self, out: str):
         if out == "":
             return None
@@ -24,7 +25,7 @@ class VideoGetterService:
         title = self.extract_title(result.stdout)
         if title is None:
             return None
-        
+
         # download video
         command = f"you-get -o '{output_dir}' --no-caption '{url}'"
         result = subprocess.run(command, shell=True, capture_output=True)
@@ -34,12 +35,12 @@ class VideoGetterService:
             if file.startswith(title) and file.endswith((".mp4", ".mkv", ".webm")):
                 return os.path.join(output_dir, file)
         return None
-    
+
     def installed_ffmpeg(self):
         command = "ffmpeg -version"
         result = subprocess.run(command, shell=True, capture_output=True)
         return result.returncode == 0
-    
+
     def extract_audio(self, video_path: str, output_dir: str):
         if not self.installed_ffmpeg():
             raise Exception("ffmpeg not installed, please install ffmpeg first.")

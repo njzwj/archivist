@@ -2,11 +2,12 @@ import os
 
 from src.container import Container
 
+
 def debug(url):
     container = Container()
 
     output_path = os.path.expanduser("~/Downloads")
-    
+
     logger = container.logger("debug")
     video_getter = container.video_getter_service()
     scraper = container.scrape_service()
@@ -38,7 +39,7 @@ def debug(url):
         logger.info(f"Transcript: {transcript[:500]}[...]")
     else:
         logger.error("Failed to transcribe audio")
-    
+
     # test scrape
     content = scraper.scrape(url)
 
@@ -58,5 +59,5 @@ def debug(url):
         f"Transcript:\n\n{transcript}\n\nPage content:\n\n{content}"
     )
     logger.info(f"Rewritten content: {rewritten_content}")
-    
+
     return file_path

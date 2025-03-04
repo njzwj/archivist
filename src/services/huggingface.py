@@ -3,6 +3,7 @@ import logging
 
 from src.config import Config
 
+
 class HuggingfaceService:
 
     default_whisper_model = "openai/whisper-large-v3-turbo"
@@ -11,7 +12,7 @@ class HuggingfaceService:
         self.config = config
         self.logger = logger
         self.get_whisper_model(self.default_whisper_model)
-    
+
     def get_whisper_model(self, whiser_model_name):
         self.whisper_model = pipeline(
             "automatic-speech-recognition",
@@ -20,6 +21,8 @@ class HuggingfaceService:
         )
 
     def transcribe(self, audio_path):
-        chunks = self.whisper_model(audio_path, batch_size=4, return_timestamps=True)["chunks"]
+        chunks = self.whisper_model(audio_path, batch_size=4, return_timestamps=True)[
+            "chunks"
+        ]
         transcript = "\n".join([chunk["text"] for chunk in chunks])
         return transcript

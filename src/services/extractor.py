@@ -4,10 +4,11 @@ from langchain_core.prompts import PromptTemplate
 from src.services import GptService
 from src.config import Config
 
+
 class ExtractorService:
 
     summarize_prompt = PromptTemplate.from_template(
-            """
+        """
         ```
         {inputs}
         ```
@@ -18,7 +19,7 @@ class ExtractorService:
     )
 
     tag_prompt = PromptTemplate.from_template(
-            """
+        """
         Content:
         ```
         {inputs}
@@ -47,7 +48,7 @@ class ExtractorService:
     )
 
     write_outline_prompt = PromptTemplate.from_template(
-            """
+        """
         ```
         {inputs}
         ```
@@ -72,7 +73,7 @@ class ExtractorService:
     )
 
     write_article_prompt = PromptTemplate.from_template(
-            """
+        """
         ```
         {inputs}
         ```
@@ -102,12 +103,12 @@ class ExtractorService:
         self.gpt = gpt
         self.config = config
         self.logger = logger
-    
+
     def convert_tag_output(self, tags: str, available_tags: str):
         tags = tags.split(",")
         available_tags = available_tags.split(",")
         if len(available_tags) > len(tags):
-            available_tags = available_tags[:len(tags)]
+            available_tags = available_tags[: len(tags)]
         tags = [int(tag) if tag.strip().isdigit() else 0 for tag in tags]
         tags = [tag for i, tag in enumerate(available_tags) if tags[i] == 1]
         return tags
@@ -115,11 +116,11 @@ class ExtractorService:
     def extract_tags(self, content: str, tags: str = None):
         if tags is None:
             tags = self.config["Tools"]["tags"]
-        summarize_chain = (
-            self.summarize_prompt | self.gpt.chat_model_efficient.bind(max_tokens=512, temperature=0)
+        summarize_chain = self.summarize_prompt | self.gpt.chat_model_efficient.bind(
+            max_tokens=512, temperature=0
         )
-        tagging_chain = (
-            self.tag_prompt | self.gpt.chat_model_smart.bind(max_tokens=256, temperature=0)
+        tagging_chain = self.tag_prompt | self.gpt.chat_model_smart.bind(
+            max_tokens=256, temperature=0
         )
         summary = summarize_chain.invoke(dict(inputs=content)).content
         self.logger.debug(f"Summary: {summary}")
@@ -131,14 +132,18 @@ class ExtractorService:
         if language is None:
             language = self.config["Tools"]["language"]
 
-        bulletin_chain = (
-            self.write_outline_prompt | self.gpt.chat_model_efficient.bind(max_tokens=512, temperature=0)
+        bulletin_chain = self.write_outline_prompt | self.gpt.chat_model_efficient.bind(
+            max_tokens=512, temperature=0
         )
-        bulletin = bulletin_chain.invoke(dict(inputs=content, language=language)).content
+        bulletin = bulletin_chain.invoke(
+            dict(inputs=content, language=language)
+        ).content
 
-        rewrite_chain = (
-            self.write_article_prompt | self.gpt.chat_model_smart.bind(max_tokens=4096, temperature=0)
+        rewrite_chain = self.write_article_prompt | self.gpt.chat_model_smart.bind(
+            max_tokens=4096, temperature=0
         )
-        rewritten_content = rewrite_chain.invoke(dict(inputs=content, language=language)).content
+        rewritten_content = rewrite_chain.invoke(
+            dict(inputs=content, language=language)
+        ).content
 
         return f"{bulletin}\n\n---\n\n{rewritten_content}"

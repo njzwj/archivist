@@ -15,6 +15,7 @@ def init():
     """Initialize the archivist environment"""
     init_command()
 
+
 @cli.command()
 @click.argument("url", required=True, type=str)
 def debug(url):
