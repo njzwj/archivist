@@ -13,4 +13,4 @@ class Container(containers.DeclarativeContainer):
 
     gpt_service = providers.Singleton(GptService, config=config)
 
-    video_getter_service = providers.Singleton(VideoGetterService)
+    video_getter_service = providers.Singleton(VideoGetterService, logger=logger("video_getter_service"))
