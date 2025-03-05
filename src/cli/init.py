@@ -1,24 +1,18 @@
-import os
-
-ARCHIVIST_ENV_PATH = os.path.expanduser(
-    os.getenv("ARCHIVIST_ENV_PATH", "~/.archivist.env")
-)
+from src.container import Container
 
 
-def run_init():
-    src_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "..", ".env.example")
-    )
-    dst_path = ARCHIVIST_ENV_PATH
-    if os.path.exists(dst_path):
-        print(f"{dst_path} already exists, skipping copy.")
+def init():
+    container = Container()
+
+    config = container.config()
+
+    archivist_env_path = config.default_config_path
+
+    logger = container.logger()
+    if config.check_config_exists():
+        logger.info(f"Config file already exists at {archivist_env_path}")
         return
-    os.makedirs(os.path.dirname(dst_path), exist_ok=True)
-    with open(src_path, "r") as src_file:
-        with open(dst_path, "w") as dst_file:
-            dst_file.write(src_file.read())
-    print(f"Copied .env.example to {dst_path}")
 
-
-if __name__ == "__main__":
-    run_init()
+    logger.info(f"Creating config file at {archivist_env_path}")
+    config.write_config()
+    logger.info(f"Config file created at {archivist_env_path}")

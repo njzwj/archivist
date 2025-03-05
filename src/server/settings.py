@@ -52,7 +52,7 @@ ROOT_URLCONF = "src.server.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [BASE_DIR / "server" / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -116,7 +116,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 STATICFILES_DIRS = [
-    BASE_DIR / "templates" / "static",
+    BASE_DIR / "server" / "templates" / "static",
 ]
 
 # Default primary key field type

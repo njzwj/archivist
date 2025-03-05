@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="archivist",
-    version="0.1.1",
+    version="1.0.0",
     packages=find_packages(),
     author="njzwj",
     author_email="njzwj2013@gmail.com",
@@ -11,6 +11,8 @@ setup(
     long_description_content_type="text/markdown",
     url="N/A",
     install_requires=[
+        "click",
+        "dependency-injector",
         "langchain",
         "langchain-openai",
         "langchain-community",
@@ -29,10 +31,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "get=src.cli:get",
-            "mpipe=src.cli:mpipe",
-            "serve=src.cli:serve",
-            "init=src.cli:run_init",
+            "arc=src.cli:main",
         ],
     },
 )

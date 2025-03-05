@@ -1,77 +1,103 @@
-import argparse
-import re
-import time
 import os
-from typing import List
+import json
+import time
 
-from ..core.item_model import ItemModel
-from ..pipelines import orchestrator
+from src.container import Container
 
-from ..utils import get_config, parse_arguments
-from ..utils.decorators import timer, count_tokens
-
-config = get_config()
-
-video_sites = [
-    "youtube",
-    "bilibili",
-    "vimeo",
-]
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Download files from a URL to a specified output directory."
-    )
-    parser.add_argument("url", type=str, help="The URL to download the file from")
-    parser.add_argument(
-        "-o",
-        "--output-dir",
-        type=str,
-        help="The directory to save the downloaded file",
-        default=config.archivist_results_path,
-    )
-    parser.add_argument(
-        "kwargs",
-        nargs=argparse.REMAINDER,
-        help="Additional arguments to pass to the download function",
-    )
-    return parser.parse_args()
+container = Container()
+logger = container.logger("get")
 
 
 def clean_url(url):
-    """
-    Clean the URL to remove unnecessary parameters.
-    Args:
-        url (str): The URL to clean.
-    Returns:
-        str: The cleaned URL.
-    """
     return url.split("?")[0].strip("/\\").strip("/")
 
 
-@timer()
-@count_tokens()
-def get_wrapper(url, output_dir, kwargs):
-    if re.search(r"bilibili", url):
-        url = clean_url(url)
+def scrape_page(url):
+    scraper = container.scrape_service()
+    content = scraper.scrape(url)
+    if content:
+        logger.debug(f"Scraped page content: {content[:100]}")
+    else:
+        logger.error("Failed to scrape")
+    return content
 
-    inputs = {
+
+def get_video_transcript(url):
+    video_getter = container.video_getter_service()
+    huggingface = container.huggingface_service()
+    output_path = os.path.expanduser(container.config()["Archivist"]["workspace"])
+
+    video_path = video_getter.download_video(url, output_path)
+    if video_path:
+        logger.debug(f"Video downloaded to {video_path}")
+    else:
+        logger.warning("Failed to download video")
+        return None
+
+    audio_path = video_getter.extract_audio(video_path, output_path)
+    if audio_path:
+        logger.debug(f"Audio extracted to {audio_path}")
+    else:
+        logger.warning("Failed to extract audio")
+        os.remove(video_path)
+        return None
+
+    transcript = huggingface.transcribe(audio_path)
+    if transcript:
+        logger.debug(f"Transcript: {transcript[:500]}[...]")
+    else:
+        logger.warning("Failed to transcribe audio")
+        os.remove(video_path)
+        os.remove(audio_path)
+        return None
+
+    os.remove(video_path)
+    os.remove(audio_path)
+    return transcript
+
+
+def get(url):
+    extractor = container.extractor_service()
+
+    output_path = os.path.expanduser(container.config()["Archivist"]["workspace"])
+    if not os.path.exists(output_path):
+        logger.info(f"Creating output directory: {output_path}")
+        os.makedirs(output_path)
+
+    url = clean_url(url)
+
+    page_content = scrape_page(url)
+    if not page_content:
+        return
+
+    metadata = extractor.extract_metadata(page_content)
+    if "title" not in metadata:
+        logger.error(f"Failed to extract title from page: {url}")
+        return
+
+    transcript = get_video_transcript(url)
+
+    tags = extractor.extract_tags(
+        f"Transcript:\n\n{transcript}\n\nPage content:\n\n{page_content}"
+    )
+    logger.debug(f"Extracted tags: {tags}")
+
+    rewritten_content = extractor.rewrite_content(
+        f"Transcript:\n\n{transcript}\n\nPage content:\n\n{page_content}"
+    )
+    logger.debug(f"Rewritten content: {rewritten_content[:100]}")
+
+    data = {
+        **metadata,
         "url": url,
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S %z"),
+        "page_content": page_content,
+        "transcript": transcript,
+        "tags": tags,
+        "briefing": rewritten_content,
     }
 
-    inputs = orchestrator.process("scrape", inputs, **kwargs)
-    inputs = orchestrator.process("transcript", inputs, **kwargs)
-    inputs = orchestrator.process("tag", inputs, **kwargs)
-    inputs = orchestrator.process("brief", inputs, **kwargs)
+    with open(f"{output_path}/{metadata['title']}.json", "w") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
 
-    output_dir = output_dir or config.archivist_results_path
-    item = ItemModel(inputs, os.path.join(output_dir, inputs["title"] + ".json"))
-    item.save()
-
-
-def get():
-    args = parse_args()
-    kwargs = parse_arguments(args.kwargs)
-    get_wrapper(args.url, args.output_dir, kwargs)
+    logger.info(f"Data saved to {output_path}/{metadata['title']}.json")

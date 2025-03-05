@@ -4,102 +4,70 @@
 ![Status](https://img.shields.io/badge/status-under_development-lightgray)
 
 TL;DR: **Archivist** is designed to
-- Keep track of what we've consumed (online videos).
+- Keep track of what we've consumed, including online videos and web pages.
 - Extract valuable insights.
 - Retrieve and read about it later.
 
-The long version: **Archivist** is designed to efficiently manage and process consumed content, primarily from video platforms such as Bilibili and YouTube. Future updates will extend support to additional content types.
+## Usage
 
-## Key Features
+Clone the repo, run `pip install -e .` to install package to your environment. `conda` is recommended.
 
-1. **Content Management**: Handles video content from public platforms, extracting and organizing information for further processing.
-2. **Data Processing**: Provides flexible processing capabilities, including:
-   - **Tagging**
-   - **Summarization**
-   - **Idea and insight generation**
-3. **Extensibility**: Built with simple, modular mechanisms for easy expansion.
+To get a page/video transcript to your workspace.
+
+```bash
+arc get 'https://www.youtube.com/...'
+```
+
+To read these contents:
+
+```bash
+arc serve
+```
+
+![Server](./images/serve.png)
 
 ## Installation and Setup
 
 ### Prerequisites
+
 - **Conda Installation**: Ensure Conda is installed on your system.
 - **Environment Setup**: Create a new Conda environment and install the required dependencies.
+- **ffmpeg**: Archivist relies on ffmpeg to extract audios.
 
 ### Environment Configuration
-- Run `init` gives you an env file in user folder.
-- Define necessary environment variables within the `.env` file.
-- By default, the system reads from `~/.archivist.env`, but you can specify a different path using the `ARCHIVIST_ENV_PATH` environment variable.
-- The output directory is also specified within this `.env` file.
 
-## Fetching Video Transcripts
+- Run `arc init` to get a copy of `.archivist.ini` to your home folder `~`.
+- Fill config file.
 
-To retrieve a transcript from a video, run the following command:
+```ini
+# config
+[Archivist]
+log_level = debug # log level, info | debug | warning | error
+workspace = ~/archivist # workspace
+gpt_provider = AzureOpenAI # Only support Azure OpenAI for now
 
-```bash
-get 'https://www.youtube.com/...' -o output/path language=Japanese tags=learning,health,...
+[AzureOpenAI]
+endpoint = https://yourservice.openai.azure.com
+api_version = 2024-12-01-preview
+key = YOUR-KEY
+deployment_smart = gpt-4o
+deployment_efficient = gpt-4o-mini
+deployment_embedding = text-embedding-ada-003-small
+
+[Tools]
+tags = economy,health,education,environment,technology,politics,society,culture,language,science,religion,history,geography,arts,sports,philosophy # tagging
+language = zh-cn # output language
 ```
 
-- The transcript is saved as a JSON file, named after the video title.
-- If `output-dir` is omitted, the file is saved in the default directory.
-- Once typed kwargs, it caches and you don't need to type again.
+## Appendix
 
-Next time run
+Archivist uses the following tools:
 
-```bash
-get 'https://www.youtube.com/...'
-```
+1. **Huggingface** is used to provide `whisper-v3-turbo` model to transcript. Make sure your computer is able to run this model.
+1. **ffmpeg** is used to extract audio from video.
+1. **you-get** is used to fetch video data.
 
-It uses the last kwargs you use.
+Known issues:
 
-## Running Pipelines on Documents
-
-Pipelines can be executed on existing documents to generate new summaries and insights. Usage:
-
-```bash
-mpipe pipeline [kwargs, [...]]
-```
-
-To generate tags for each document:
-
-```bash
-mpipe tag tags=learning,studying
-```
-
-To generate a briefing:
-
-```bash
-mpipe brief language=Japanese
-```
-
-## View Formatted Contents
-
-To start a local server for browsing tagged posts, run the following command:
-
-```bash
-serve [argv...]
-serve 8001
-```
-
-This equals to `manage.py runserver` in django.
-
-![Server](./images/serve.png)
-
-## TODOs
-
-[] Support Cookie for websites protected by login.
-
-[x] Add cache kwargs so no need to type every time.
-
-[x] Develope `mpipe`: A tool for tagging, rewriting, summarizing, and modifying stored files.
-
-[x] Added `serve`: A server tool to display categorized pages for viewing collected content.
-
-[x] Enhance `get` to fetch more text data from pages, including those without videos.
-
-[x] Streamline default pipelines for get so that each time I won't need to run `mpipe` for multiple times.
-
-
-## References
-
-- **You-Get**: A reliable tool for video content retrieval.
-- **Hugging Face**: A powerful and user-friendly NLP framework supporting various processing tasks.
+1. Ouputs from inner tools are not supressed.
+1. Cookies are not supported, some websites will block the video downloading.
