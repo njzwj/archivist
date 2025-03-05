@@ -111,7 +111,7 @@ class ExtractorService:
         - author
         Ouput format:
         ```json
-        {{"published_at": "2021-01-01","author": "John Doe"}}
+        {{"title": "How to invest", "published_at": "2021-01-01","author": "John Doe"}}
         ```
         But replace the values with the actual values from the content.
         The original content may not contain exactly the same name for the keys. Decide the best value to use for each key.
@@ -144,7 +144,7 @@ class ExtractorService:
         )
         metadata = metadata_chain.invoke(dict(inputs=content)).content
         metadata = self.extract_json(metadata)
-        if "published_at" not in metadata or "author" not in metadata:
+        if "published_at" not in metadata or "author" not in metadata or "title" not in metadata:
             self.logger.warning(f"Failed to extract metadata. Extracted: {json.dumps(metadata, ensure_ascii=False)}")
         return metadata
 
