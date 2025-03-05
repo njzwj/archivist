@@ -1,4 +1,5 @@
 import logging
+import json
 from langchain_core.prompts import PromptTemplate
 
 from src.services import GptService
@@ -99,6 +100,26 @@ class ExtractorService:
         """
     )
 
+    extract_metadata_prompt = PromptTemplate.from_template(
+        """Here is a web-scrapped content. Please extract the keys from the content.
+        content:
+        ```
+        {inputs}
+        ```
+        Extract the following keys:
+        - published_at (the published date time, e.g., 2022-01-31 18:23:45)
+        - author
+        Ouput format:
+        ```json
+        {{"published_at": "2021-01-01","author": "John Doe"}}
+        ```
+        But replace the values with the actual values from the content.
+        The original content may not contain exactly the same name for the keys. Decide the best value to use for each key.
+        If the key is not found, leave it empty.
+        Do not include any other keys.
+        """
+    )
+
     def __init__(self, gpt: GptService, config: Config, logger: logging.Logger):
         self.gpt = gpt
         self.config = config
@@ -112,6 +133,20 @@ class ExtractorService:
         tags = [int(tag) if tag.strip().isdigit() else 0 for tag in tags]
         tags = [tag for i, tag in enumerate(available_tags) if tags[i] == 1]
         return tags
+    
+    def extract_json(self, content: str):
+        content = content.replace("```json", "").replace("```", "")
+        return json.loads(content)
+    
+    def extract_metadata(self, content: str):
+        metadata_chain = self.extract_metadata_prompt | self.gpt.chat_model_efficient.bind(
+            max_tokens=256, temperature=0
+        )
+        metadata = metadata_chain.invoke(dict(inputs=content)).content
+        metadata = self.extract_json(metadata)
+        if "published_at" not in metadata or "author" not in metadata:
+            self.logger.warning(f"Failed to extract metadata. Extracted: {json.dumps(metadata, ensure_ascii=False)}")
+        return metadata
 
     def extract_tags(self, content: str, tags: str = None):
         if tags is None:

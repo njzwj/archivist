@@ -1,4 +1,5 @@
 import os
+import json
 
 from src.container import Container
 
@@ -53,6 +54,10 @@ def debug(url):
         f"Transcript:\n\n{transcript}\n\nPage content:\n\n{content}"
     )
     logger.info(f"Extracted tags: {tags}")
+
+    # metadata extract
+    metadata = extractor.extract_metadata(content)
+    logger.info(f"Extracted metadata: {json.dumps(metadata, ensure_ascii=False)}")
 
     # test rewrite
     rewritten_content = extractor.rewrite_content(
