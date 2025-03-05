@@ -34,14 +34,15 @@ def test_convert_tag_output(
     result = extractor_service.convert_tag_output(input_tags, available_tags)
     assert result == expected
 
+
 @pytest.mark.parametrize(
     "content,expected",
     [
-        ("```json{\"key\": \"value\"}", dict(key="value")),
-        ("```json{\"key\": 1}```", dict(key=1)),
-        ("{\"key\": [1, 2, 3]}", dict(key=[1, 2, 3])),
-        ("```{\"key\": {\"key2\": 1}}```", dict(key=dict(key2=1))),
-    ]
+        ('```json{"key": "value"}', dict(key="value")),
+        ('```json{"key": 1}```', dict(key=1)),
+        ('{"key": [1, 2, 3]}', dict(key=[1, 2, 3])),
+        ('```{"key": {"key2": 1}}```', dict(key=dict(key2=1))),
+    ],
 )
 def test_extract_json(mock_config, container, content, expected):
     container.config.override(mock_config)

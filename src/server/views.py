@@ -26,7 +26,9 @@ def parse_post(obj: dict) -> dict:
             published_at=datetime.strptime(obj["published_at"], "%Y-%m-%d %H:%M:%S"),
             author=obj.get("author", "Unknown"),
             tags=obj.get("tags", []),
-            transcript=markdown.markdown(transcript if transcript else "", tab_length=2),
+            transcript=markdown.markdown(
+                transcript if transcript else "", tab_length=2
+            ),
             briefing=markdown.markdown(obj.get("briefing", ""), tab_length=2),
         ),
         content=markdown.markdown(obj.get("briefing", ""), tab_length=2),
@@ -46,7 +48,7 @@ def get_all_posts():
                 obj["slug"] = file
                 post = parse_post(obj)
                 posts.append(post)
-    
+
     posts.sort(key=lambda x: x["meta"]["created_at"], reverse=True)
 
     tags = [tag for post in posts for tag in post["meta"]["tags"]]

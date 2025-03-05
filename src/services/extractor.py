@@ -133,19 +133,26 @@ class ExtractorService:
         tags = [int(tag) if tag.strip().isdigit() else 0 for tag in tags]
         tags = [tag for i, tag in enumerate(available_tags) if tags[i] == 1]
         return tags
-    
+
     def extract_json(self, content: str):
         content = content.replace("```json", "").replace("```", "")
         return json.loads(content)
-    
+
     def extract_metadata(self, content: str):
-        metadata_chain = self.extract_metadata_prompt | self.gpt.chat_model_efficient.bind(
-            max_tokens=256, temperature=0
+        metadata_chain = (
+            self.extract_metadata_prompt
+            | self.gpt.chat_model_efficient.bind(max_tokens=256, temperature=0)
         )
         metadata = metadata_chain.invoke(dict(inputs=content)).content
         metadata = self.extract_json(metadata)
-        if "published_at" not in metadata or "author" not in metadata or "title" not in metadata:
-            self.logger.warning(f"Failed to extract metadata. Extracted: {json.dumps(metadata, ensure_ascii=False)}")
+        if (
+            "published_at" not in metadata
+            or "author" not in metadata
+            or "title" not in metadata
+        ):
+            self.logger.warning(
+                f"Failed to extract metadata. Extracted: {json.dumps(metadata, ensure_ascii=False)}"
+            )
         return metadata
 
     def extract_tags(self, content: str, tags: str = None):

@@ -1,5 +1,6 @@
 import os
 
+
 def serve(argv):
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "src.server.settings")
     argv = ["manage.py", "runserver"] + list(argv)
