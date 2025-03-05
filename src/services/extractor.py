@@ -88,7 +88,7 @@ class ExtractorService:
 
         Writing Guidelines:
         - Develop ideas in well-structured paragraphs—avoid excessive lists or headings.
-        - Detail Retention: Do not over-simplify; keep subtle details from the original.
+        - Detail Retention: Do not over-simplify; **keep subtle details** from the original.
         - Write the provided content into **{language}**. Retain original terms/names when meaning is unclear.
 
         Format Instructions:
@@ -96,7 +96,7 @@ class ExtractorService:
         - Avoid excessive subheadings, but ensure readability.
 
         **Task:** Write an article on the provided content.
-        Write directly below this line without any additional explanation. In the language of **{language}**.
+        Write directly below this line without any additional explanation. In the language of **{language}**. Skip the triple backticks. Write direcly below this line without any additional explanation.
         """
     )
 
@@ -111,7 +111,7 @@ class ExtractorService:
         - author
         Ouput format:
         ```json
-        {{"title": "How to invest", "published_at": "2021-01-01","author": "John Doe"}}
+        {{"title": "How to invest", "published_at": "2021-01-01 17:20:15","author": "John Doe"}}
         ```
         But replace the values with the actual values from the content.
         The original content may not contain exactly the same name for the keys. Decide the best value to use for each key.

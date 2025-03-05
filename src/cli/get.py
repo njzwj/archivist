@@ -1,6 +1,6 @@
 import os
 import json
-import datetime
+import time
 
 from src.container import Container
 
@@ -86,11 +86,11 @@ def get(url):
     data = {
         **metadata,
         "url": url,
-        "created_at": datetime.datetime.now().isoformat(),
+        "created_at": time.strftime("%Y-%m-%d %H:%M:%S %z"),
         "page_content": page_content,
         "transcript": transcript,
         "tags": tags,
-        "brief": rewritten_content,
+        "briefing": rewritten_content,
     }
 
     with open(f"{output_path}/{metadata['title']}.json", "w") as f:
