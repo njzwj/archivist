@@ -78,17 +78,21 @@ class ExtractorService:
         ```
         {inputs}
         ```
-        **Task:** Write an article on the provided content above.
+        **Task:** Write an article on the provided content/transcript above.
 
         Key Requirements:
         - Maintain Core Ideas: Preserve the main arguments and essential details.
+        - Average article length: If the content is too long, make it more compact, retain information by make it more concise.
+        - Avoid spoken language: Convert spoken language to written language.
         - Improve Structure & Flow: Ensure logical organization with smooth transitions.
         - Enhance Clarity & Depth: Keep the content informative, engaging, and nuanced.
         - Refine Style & Tone: Adopt a professional, polished, and journalistic tone.
 
         Writing Guidelines:
         - Develop ideas in well-structured paragraphs—avoid excessive lists or headings.
-        - Detail Retention: Do not over-simplify; **keep subtle details** from the original.
+        - Use clear, concise language—avoid jargon, complex terms, or overly casual expressions.
+        - Maintain a formal, professional tone—avoid personal opinions or informal language.
+        - Do not over simplify.
         - Write the provided content into **{language}**. Retain original terms/names when meaning is unclear.
 
         Format Instructions:
