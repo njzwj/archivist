@@ -12,6 +12,10 @@ def clean_url(url):
     return url.split("?")[0].strip("/\\").strip("/")
 
 
+def clean_file_name(name):
+    return name.replace(":", "_").replace("/", "_").replace("\\", "_").replace("?", "_")
+
+
 def scrape_page(url):
     scraper = container.scrape_service()
     content = scraper.scrape(url)
@@ -97,7 +101,9 @@ def get(url):
         "briefing": rewritten_content,
     }
 
-    with open(f"{output_path}/{metadata['title']}.json", "w") as f:
+    cleaned_file_name = clean_file_name(metadata["title"])
+
+    with open(f"{output_path}/{cleaned_file_name}.json", "w") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-    logger.info(f"Data saved to {output_path}/{metadata['title']}.json")
+    logger.info(f"Data saved to {output_path}/{cleaned_file_name}.json")
