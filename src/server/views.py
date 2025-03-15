@@ -3,6 +3,7 @@ from datetime import datetime
 import markdown
 import os
 import json
+from difflib import SequenceMatcher
 
 from src.container import Container
 
@@ -62,6 +63,12 @@ def get_all_posts():
 def get_post_by_slug(slug: str) -> dict:
     container = Container()
     path = os.path.expanduser(container.config()["Archivist"]["workspace"])
+
+    for file in os.listdir(path):
+        if SequenceMatcher(None, file, slug).ratio() > 0.8:
+            slug = file
+            break
+
 
     with open(os.path.join(path, slug), "r") as f:
         obj = json.load(f)

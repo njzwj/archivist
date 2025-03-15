@@ -78,7 +78,7 @@ class ExtractorService:
         ```
         {inputs}
         ```
-        **Task:** Write an article on the provided content/transcript above.
+        **Task:** Write an article on the provided content/transcript above. Target should be like a news article, or a blog post. NOT a transcript. Good example: Economist.
 
         Key Requirements:
         - Maintain Core Ideas: Preserve the main arguments and essential details.
@@ -87,6 +87,7 @@ class ExtractorService:
         - Improve Structure & Flow: Ensure logical organization with smooth transitions.
         - Enhance Clarity & Depth: Keep the content informative, engaging, and nuanced.
         - Refine Style & Tone: Adopt a professional, polished, and journalistic tone.
+        - Simplify Jargon: Use layman's terms for complex concepts, but maintain accuracy.
 
         Writing Guidelines:
         - Develop ideas in well-structured paragraphs—avoid excessive lists or headings.

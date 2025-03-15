@@ -2,6 +2,7 @@ import logging
 import subprocess
 import json
 import os
+from difflib import SequenceMatcher
 
 
 class VideoGetterService:
@@ -32,7 +33,8 @@ class VideoGetterService:
 
         # scan for video file
         for file in os.listdir(output_dir):
-            if file.startswith(title) and file.endswith((".mp4", ".mkv", ".webm")):
+            if (SequenceMatcher(None, file, title).ratio() > 0.8 and 
+                file.endswith((".mp4", ".mkv", ".webm"))):
                 return os.path.join(output_dir, file)
         return None
 
